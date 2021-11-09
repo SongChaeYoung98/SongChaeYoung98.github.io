@@ -19,7 +19,7 @@ function general_utils() {
 }
 
 function blog_posts() {
-
+//
     // keeping it static, can be fetched from a blog dynamically as well
     let posts = [
         {
