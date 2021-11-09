@@ -59,20 +59,6 @@ function blog_posts() {
     }
 
     // for the more posts link
-    let post_template = `
-    <div class="blog-post more-blogs" onclick="blog_link_click('https://www.nagekar.com');">
-
-        <div class="blog-link">
-
-            <h3><a href="https://www.nagekar.com">Visit the blog for more posts</a></h3>            
-
-        </div>
-
-        <div class="blog-goto-link">
-            <img class="blog-arrow" src="/assets/images/right-open-mini.svg"/>
-        </div>
-    </div>
-    `;
 
     post_html.push(post_template);
 
