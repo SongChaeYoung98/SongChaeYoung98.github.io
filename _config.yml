@@ -7,12 +7,12 @@ markdown: kramdown
 exclude: [vendor/ruby]
 
 # Personalization
-github_username: abhn
-blog_url: https://www.nagekar.com
-email: abhishek@nagekar.com
-keybase_username: abhn
-twitter_username: abhn_
-reddit_username: abhn
+github_username: SongChaeYoung98
+blog_url: https://github.com/SongChaeYoung98/SongChaeYoung98.github.io
+email: 0.0yeriel@gmail.com
+keybase_username: 
+twitter_username: 
+reddit_username: 
 
 # absolute or relative
 profile_picture: assets/images/캡처.PNG
