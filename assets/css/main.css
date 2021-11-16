@@ -453,10 +453,10 @@ a {
 }
 
 .project-technologies {
-  /* display: -ms-grid; */
+  display: -ms-grid;
   display: grid;
-  /* -ms-grid-columns: (minmax(120px, 1fr))[auto-fill]; */
-  grid-template-columns: repeat(4, minmax(120px, 1fr));
+    -ms-grid-columns: (minmax(120px, 1fr))[auto-fill];
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
   margin: 20px 0;
   grid-gap: 5px;
   grid-row-gap: 10px;
