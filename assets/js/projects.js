@@ -11,13 +11,13 @@ let render_projects = (slug) => {
 
     let projects_obj = [
         {
-            image: 'assets/images/mentors.jpg',
-            link: 'https://github.com/abhn/Mporter',
-            title: 'Mporter',
-            demo: 'https://mporter.co',
-            technologies: ['Flask', 'Celery', 'Python'],
+            image: 'assets/images/wheat-predict.PNG',
+            link: 'https://github.com/SongChaeYoung98/prediction-of-wheat-cultivating-areas',
+            title: '미래의 밀 경작 가능지 예측',
+            demo: false,
+            technologies: ['Jupyter Notebook', 'Machine Learning', 'Python'],
             description: "Flask web application for easy reporting updates to one's mentor. Multi-user support, easy to deploy and use.",
-            categories: ['featured', 'webdev']
+            categories: ['featured', 'all']
         },
         {
             image: 'assets/images/mobile-landscape.jpg',
