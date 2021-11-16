@@ -24,9 +24,9 @@ let render_projects = (slug) => {
             link: 'https://github.com/SongChaeYoung98/household-account',
             title: '안드로이드 가계부 앱',
             demo: false,
-            technologies: ['Semantic UI', 'Jekyll'],
+            technologies: ['Android Studio', 'JAVA'],
             description: "A modern Jekyll theme with grid frontpage, beautiful typography, mobile responsive, made with Semantic UI.",
-            categories: ['featured', 'webdev']
+            categories: ['featured', 'native']
         },
         {
             image: 'assets/images/collage.jpg',
