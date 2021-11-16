@@ -15,7 +15,7 @@ let render_projects = (slug) => {
             link: 'https://github.com/SongChaeYoung98/prediction-of-wheat-cultivating-areas',
             title: '미래의 밀 경작 가능지 예측',
             demo: false,
-            technologies: ['Jupyter Notebook', 'Machine Learning', 'Python'],
+            technologies: ['Jupyter', 'Machine Learning', 'Python'],
             description: "Flask web application for easy reporting updates to one's mentor. Multi-user support, easy to deploy and use.",
             categories: ['featured', 'all']
         },
