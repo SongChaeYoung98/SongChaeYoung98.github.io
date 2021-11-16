@@ -452,6 +452,7 @@ a {
   margin: 0 5px;
 }
 
+/* 최종 */
 .project-technologies {
   display: -ms-grid;
   display: grid;
@@ -463,6 +464,18 @@ a {
   width: 100%;
 }
 
+/* 수정 */
+/* .project-technologies {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  margin: 20px 0;
+  grid-gap: 5px;
+  grid-row-gap: 10px;
+  width: 100%;
+} */
+
+
+/* 원본 */
 /* .project-technologies {
   display: -ms-grid;
   display: grid;
