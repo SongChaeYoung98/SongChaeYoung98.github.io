@@ -20,10 +20,10 @@ let render_projects = (slug) => {
             categories: ['featured', 'all']
         },
         {
-            image: 'assets/images/mobile-landscape.jpg',
-            link: 'https://github.com/abhn/Wall-E',
-            title: 'Wall-E',
-            demo: 'http://wall-e-jekyll.github.io/',
+            image: 'assets/images/household-account.PNG',
+            link: 'https://github.com/SongChaeYoung98/household-account',
+            title: '안드로이드 가계부 앱',
+            demo: false,
             technologies: ['Semantic UI', 'Jekyll'],
             description: "A modern Jekyll theme with grid frontpage, beautiful typography, mobile responsive, made with Semantic UI.",
             categories: ['featured', 'webdev']
