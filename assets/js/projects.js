@@ -29,13 +29,13 @@ let render_projects = (slug) => {
             categories: ['featured', 'native']
         },
         {
-            image: 'assets/images/collage.jpg',
+            image: 'assets/images/voice-analysis.PNG',
             link: 'https://github.com/abhn/Marvel',
-            title: 'Marvel',
+            title: '음성을 통한 감정 분석',
             demo: false,
             technologies: ['Android', 'OpenCV'],
             description: "Attendance marking tool that uses face recognition for marking attendance and firebase for tracking and analytics.",
-            categories: ['featured', 'native']
+            categories: ['featured', 'webdev']
         },
         {
             image: 'assets/images/mpw.jpg',
