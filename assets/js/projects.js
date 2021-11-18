@@ -33,7 +33,7 @@ let render_projects = (slug) => {
             link: 'https://github.com/SongChaeYoung98/voice-emotion-analysis',
             title: '음성을 통한 감정 분석',
             demo: false,
-            technologies: ['Pycharm', 'BLSTM', 'DL', 'Python'],
+            technologies: ['Pycharm', 'BLSTM', 'Python'],
             description: "Attendance marking tool that uses face recognition for marking attendance and firebase for tracking and analytics.",
             categories: ['featured', 'webdev']
         },
