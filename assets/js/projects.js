@@ -42,9 +42,9 @@ let render_projects = (slug) => {
             link: 'https://github.com/abhn/mpw',
             title: '표정을 통한 감정 분석',
             demo: 'https://www.nagekar.com/mpw',
-            technologies: ['Semantic UI', 'CSS3'],
+            technologies: ['Pycharm', 'OpenCV', 'RNN', 'Python'],
             description: "Master Password is an ingenious password solution that makes your passwords truly impossible to lose.",
-            categories: ['featured', 'security']
+            categories: ['featured', 'webdev']
         },
         
     ]
