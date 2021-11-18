@@ -30,10 +30,10 @@ let render_projects = (slug) => {
         },
         {
             image: 'assets/images/voice-analysis.PNG',
-            link: 'https://github.com/abhn/Marvel',
+            link: 'https://github.com/SongChaeYoung98/voice-emotion-analysis',
             title: '음성을 통한 감정 분석',
             demo: false,
-            technologies: ['Android', 'OpenCV'],
+            technologies: ['Pycharm', 'BLSTM', 'DL', 'Python'],
             description: "Attendance marking tool that uses face recognition for marking attendance and firebase for tracking and analytics.",
             categories: ['featured', 'webdev']
         },
