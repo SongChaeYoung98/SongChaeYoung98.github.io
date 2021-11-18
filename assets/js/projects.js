@@ -38,10 +38,10 @@ let render_projects = (slug) => {
             categories: ['featured', 'webdev']
         },
         {
-            image: 'assets/images/mpw.jpg',
+            image: 'assets/images/facial-emotioni-recognition.PNG',
             link: 'https://github.com/abhn/mpw',
             title: '표정을 통한 감정 분석',
-            demo: 'https://www.nagekar.com/mpw',
+            demo: false,
             technologies: ['Pycharm', 'OpenCV', 'RNN', 'Python'],
             description: "Master Password is an ingenious password solution that makes your passwords truly impossible to lose.",
             categories: ['featured', 'webdev']
