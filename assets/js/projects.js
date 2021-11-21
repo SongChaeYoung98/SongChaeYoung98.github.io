@@ -39,7 +39,7 @@ let render_projects = (slug) => {
         },
         {
             image: 'assets/images/facial-emotioni-recognition.PNG',
-            link: 'https://github.com/abhn/mpw',
+            link: 'https://github.com/SongChaeYoung98/facial-expression-recognition',
             title: '표정을 통한 감정 분석',
             demo: false,
             technologies: ['Pycharm', 'OpenCV', 'RNN', 'Python'],
