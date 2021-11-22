@@ -232,7 +232,8 @@ img {
 }
 
 .paragraph-text-normal {
-  font-family: 'PT Sans', sans-serif;
+  /* font-family: 'PT Sans', sans-serif; */
+  font-family: 'Nanum Gothic Coding', monospace;
   color: #404040;
 }
 
