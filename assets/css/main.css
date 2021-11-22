@@ -224,7 +224,7 @@ img {
 
 .paragraph-text {
   /* font-family: 'PT Sans', sans-serif; */
-  font-family: 'Nanum Gothic Coding', monospace;
+  font-family: 'Nanum Gothic', sans-serif;
   font-size: 20.8px;
   font-size: 1.3rem;
   margin: 30px auto;
@@ -234,7 +234,7 @@ img {
 
 .paragraph-text-normal {
   /* font-family: 'PT Sans', sans-serif; */
-  font-family: 'Nanum Gothic Coding', monospace;
+  font-family: 'Nanum Gothic', sans-serif;
   color: #404040;
   font-weight: 550;
 }
