@@ -229,14 +229,14 @@ img {
   font-size: 1.3rem;
   margin: 30px auto;
   color: #404040;
-  font-weight: 550;
+  font-weight: 400;
 }
 
 .paragraph-text-normal {
   /* font-family: 'PT Sans', sans-serif; */
   font-family: 'Nanum Gothic', sans-serif;
   color: #404040;
-  font-weight: 550;
+  font-weight: 400;
 }
 
 .pt-sans-font {
