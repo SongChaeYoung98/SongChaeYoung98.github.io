@@ -222,25 +222,37 @@ img {
   color: #fff;
 }
 
+/* @font-face {
+	font-family: 'Gmarket Sans';    font-style: normal;    font-weight: 300;
+	src: local('Gmarket Sans Light'), local('GmarketSans-Light'),
+	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff2') format('woff2'),
+	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff') format('woff'); */
+
 .paragraph-text {
   /* font-family: 'PT Sans', sans-serif; */
   /* font-family: 'Nanum Gothic', sans-serif; */
   /* font-family: 'Noto Sans KR', sans-serif; */
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Gmarket Sans';
+  font-style: normal;
   font-size: 20.8px;
   font-size: 1.3rem;
   margin: 30px auto;
   color: #404040;
-  font-weight: 400;
+  font-weight: 300;
+  src: local('Gmarket Sans Light'), local('GmarketSans-Light'),
+	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff2') format('woff2'),
+	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff') format('woff');
+
 }
 
 .paragraph-text-normal {
-  /* font-family: 'PT Sans', sans-serif; */
-  /* font-family: 'Nanum Gothic', sans-serif; */
-  /* font-family: 'Noto Sans KR', sans-serif; */
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Gmarket Sans';
+  font-style: normal;
   color: #404040;
-  font-weight: 400;
+  font-weight: 300;
+  src: local('Gmarket Sans Light'), local('GmarketSans-Light'),
+	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff2') format('woff2'),
+	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff') format('woff');
 }
 
 .pt-sans-font {
