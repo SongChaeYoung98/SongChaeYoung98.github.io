@@ -1,6 +1,18 @@
+@font-face {
+  font-family: 's-core-dream-extralight';
+  src: url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff2') format('woff2'),
+       url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  unicode-range: U+AC00-D7A3;
+}
+
+@import url("S-Core-Dream-light/s-core-dream.css");
+
+
 body {
   min-width: 360px;
-  font-family: 'PT Sans', sans-serif;
+  font-family: 'PT Sans', sans-serif, 's-core-dream-extralight';
   font-size: 16px;
 }
 
@@ -244,17 +256,12 @@ img {
   font-style: normal;
 } */
 
-
-@import url("S-Core-Dream-light/s-core-dream.css");
-
 .paragraph-text {
   font-family: 's-core-dream-extralight';
   font-size: 20.8px;
   font-size: 1.3rem;
   margin: 30px auto;
   color: #404040;
-  src: url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff2') format('woff2'),
-       url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   line-height: 150%
@@ -264,8 +271,6 @@ img {
 .paragraph-text-normal {
   font-family: 's-core-dream-extralight';
   color: #404040;
-  src: url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff2') format('woff2'),
-       url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   line-height: 150%;
