@@ -224,9 +224,11 @@ img {
 
 /* paragraph 수정 */
 
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap');
+
 
 .paragraph-text {
-  font-family: 's-core-dream-extralight';
+  font-family: 'IBM Plex Sans KR', sans-serif;
   font-size: 20.8px;
   font-size: 1.3rem;
   margin: 30px auto;
@@ -238,7 +240,7 @@ img {
 }
 
 .paragraph-text-normal {
-  font-family: 's-core-dream-extralight';
+  font-family: 'IBM Plex Sans KR', sans-serif;
   color: #404040;
   font-weight: normal;
   font-style: normal;
