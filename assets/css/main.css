@@ -242,6 +242,7 @@ img {
   src: local('Gmarket Sans Light'), local('GmarketSans-Light'),
 	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff2') format('woff2'),
 	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff') format('woff');
+  line-height: 150%
 
 }
 
@@ -253,6 +254,7 @@ img {
   src: local('Gmarket Sans Light'), local('GmarketSans-Light'),
 	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff2') format('woff2'),
 	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff') format('woff');
+  line-height: 150%;
 }
 
 .pt-sans-font {
