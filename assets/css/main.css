@@ -235,9 +235,6 @@ img {
     font-style: normal; */
 
 .paragraph-text {
-  /* font-family: 'PT Sans', sans-serif; */
-  /* font-family: 'Nanum Gothic', sans-serif; */
-  /* font-family: 'Noto Sans KR', sans-serif; */
   font-family: 's-core-dream-light';
   font-style: normal;
   font-size: 20.8px;
@@ -246,8 +243,7 @@ img {
   color: #404040;
   font-weight: normal;
   font-style: normal;
-  src: url('scdream3-webfont.woff2') format('woff2'),
-         url('scdream3-webfont.woff') format('woff');
+  src: url('assets/font/SCDream3.otf') format('opentype');
   line-height: 150%
 
 }
@@ -257,8 +253,7 @@ img {
   font-style: normal;
   color: #404040;
   font-weight: normal;
-  src: url('scdream3-webfont.woff2') format('woff2'),
-         url('scdream3-webfont.woff') format('woff');
+  src: url('assets/font/SCDream3.otf') format('opentype');
   line-height: 150%;
 }
 
