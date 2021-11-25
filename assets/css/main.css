@@ -234,26 +234,31 @@ img {
     font-weight: normal;
     font-style: normal; */
 
-.paragraph-text {
-  font-family: 's-core-dream-light';
+@import url("S-Core-Dream-light/s-core-dream.css");
+
+@font-face {
+  font-family: 's-core-dream-extralight';
+  src: url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff2') format('woff2'),
+       url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff') format('woff');
+  font-weight: normal;
   font-style: normal;
+}
+
+
+
+.paragraph-text {
+  font-family: 's-core-dream-extralight';
   font-size: 20.8px;
   font-size: 1.3rem;
   margin: 30px auto;
   color: #404040;
-  font-weight: normal;
-  font-style: normal;
-  src: url('assets/font/SCDream3.otf') format('opentype');
   line-height: 150%
 
 }
 
 .paragraph-text-normal {
-  font-family: 's-core-dream-light';
-  font-style: normal;
+  font-family: 's-core-dream-extralight';
   color: #404040;
-  font-weight: normal;
-  src: url('assets/font/SCDream3.otf') format('opentype');
   line-height: 150%;
 }
 
