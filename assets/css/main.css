@@ -1,14 +1,11 @@
 @font-face {
   font-family: 's-core-dream-extralight';
-  src: url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff2') format('woff2'),
-       url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff') format('woff');
+  src: url('scdream2-webfont.woff2') format('woff2'),
+       url('scdream2-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   unicode-range: U+AC00-D7A3;
 }
-
-@import url("S-Core-Dream-light/s-core-dream.css");
-
 
 body {
   min-width: 360px;
