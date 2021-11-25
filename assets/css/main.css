@@ -234,17 +234,18 @@ img {
     font-weight: normal;
     font-style: normal; */
 
-@import url("S-Core-Dream-light/s-core-dream.css");
 
-@font-face {
+
+/* @font-face {
   font-family: 's-core-dream-extralight';
   src: url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff2') format('woff2'),
        url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
-}
+} */
 
 
+@import url("S-Core-Dream-light/s-core-dream.css");
 
 .paragraph-text {
   font-family: 's-core-dream-extralight';
@@ -252,6 +253,10 @@ img {
   font-size: 1.3rem;
   margin: 30px auto;
   color: #404040;
+  src: url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff2') format('woff2'),
+       url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
   line-height: 150%
 
 }
@@ -259,6 +264,10 @@ img {
 .paragraph-text-normal {
   font-family: 's-core-dream-extralight';
   color: #404040;
+  src: url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff2') format('woff2'),
+       url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
   line-height: 150%;
 }
 
