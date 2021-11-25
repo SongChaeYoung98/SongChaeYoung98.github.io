@@ -1,15 +1,6 @@
-@font-face {
-  font-family: 's-core-dream-extralight';
-  src: url('scdream2-webfont.woff2') format('woff2'),
-       url('scdream2-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  unicode-range: U+AC00-D7A3;
-}
-
 body {
   min-width: 360px;
-  font-family: 'PT Sans', sans-serif, 's-core-dream-extralight';
+  font-family: 'PT Sans', sans-serif;
   font-size: 16px;
 }
 
@@ -231,27 +222,8 @@ img {
   color: #fff;
 }
 
-/* 
-	font-family: 'Gmarket Sans';    font-style: normal;    font-weight: 300;
-	src: local('Gmarket Sans Light'), local('GmarketSans-Light'),
-	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff2') format('woff2'),
-	url('http://script.ebay.co.kr/fonts/GmarketSansLight.woff') format('woff'); */
+/* paragraph 수정 */
 
-  /* font-family: 's-core-dream-light';
-    src: url('scdream3-webfont.woff2') format('woff2'),
-         url('scdream3-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal; */
-
-
-
-/* @font-face {
-  font-family: 's-core-dream-extralight';
-  src: url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff2') format('woff2'),
-       url('assets/fonts/S-Core-Dream-light/scdream2-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-} */
 
 .paragraph-text {
   font-family: 's-core-dream-extralight';
