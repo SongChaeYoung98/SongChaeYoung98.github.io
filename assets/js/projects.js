@@ -16,7 +16,7 @@ let render_projects = (slug) => {
             title: '미래의 밀 경작 가능지 예측',
             demo: false,
             technologies: ['Jupyter', 'Random Forest', 'Python'],
-            description: "Flask web application for easy reporting updates to one's mentor. Multi-user support, easy to deploy and use.",
+            description: "2030, 2040년의 변화된 기후에 따라 전국 밀 경작 가능지를 머신러닝으로 예측하는 프로그램",
             categories: ['featured', 'all']
         },
         {
