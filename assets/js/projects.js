@@ -25,7 +25,7 @@ let render_projects = (slug) => {
             title: '안드로이드 가계부 앱',
             demo: false,
             technologies: ['Android Studio', 'JAVA'],
-            description: "A modern Jekyll theme with grid frontpage, beautiful typography, mobile responsive, made with Semantic UI.",
+            description: "캘린더 인터페이스에, 날짜 별 자본 소모 내역을 저장 할 수 있는 안드로이드 가계부 앱",
             categories: ['featured', 'native']
         },
         {
@@ -34,7 +34,7 @@ let render_projects = (slug) => {
             title: '음성을 통한 감정 분석',
             demo: false,
             technologies: ['Pycharm', 'BLSTM', 'Python'],
-            description: "Attendance marking tool that uses face recognition for marking attendance and firebase for tracking and analytics.",
+            description: "사용자의 음성 속 감정을 7가지로 분류하여, 그 중 가장 큰 퍼센트를 얻은 감정을 기준으로 사용자의 기분을 판단하는 프로그램",
             categories: ['featured', 'webdev']
         },
         {
@@ -43,7 +43,7 @@ let render_projects = (slug) => {
             title: '표정을 통한 감정 분석',
             demo: false,
             technologies: ['Pycharm', 'OpenCV', 'RNN', 'Python'],
-            description: "Master Password is an ingenious password solution that makes your passwords truly impossible to lose.",
+            description: "코드 복구 중",
             categories: ['featured', 'webdev']
         },
         
