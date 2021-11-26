@@ -25,7 +25,7 @@ let render_projects = (slug) => {
             title: '안드로이드 가계부 앱',
             demo: false,
             technologies: ['Android Studio', 'JAVA'],
-            description: "캘린더 인터페이스에, 날짜 별 자본 소모 내역을 저장 할 수 있는 안드로이드 가계부 앱",
+            description: "캘린더 인터페이스에, 날짜 별 자본 소모 내역을 저장 할 수 있는 안드로이드 가계부 어플리케이션",
             categories: ['featured', 'native']
         },
         {
