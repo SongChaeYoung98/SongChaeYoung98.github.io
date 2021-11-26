@@ -226,7 +226,7 @@ img {
 
 
 
-.paragraph-text {
+/* .paragraph-text {
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 20.8px;
   font-size: 1.3rem;
@@ -244,7 +244,29 @@ img {
   font-weight: normal;
   font-style: normal;
   line-height: 150%;
+} */
+
+.paragraph-text {
+  font-family: 'Poor Story', cursive;
+  font-size: 20.8px;
+  font-size: 1.3rem;
+  margin: 30px auto;
+  color: #404040;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 150%
+
 }
+
+.paragraph-text-normal {
+  font-family: 'Poor Story', cursive;
+  color: #404040;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 150%;
+}
+
+
 
 .pt-sans-font {
   font-family: 'PT Sans', sans-serif;
