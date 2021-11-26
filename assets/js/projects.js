@@ -43,7 +43,7 @@ let render_projects = (slug) => {
             title: '표정을 통한 감정 분석',
             demo: false,
             technologies: ['Pycharm', 'OpenCV', 'RNN', 'Python'],
-            description: "코드 복구 중",
+            description: "코드 복구 중, 업로드 지연",
             categories: ['featured', 'webdev']
         },
         
