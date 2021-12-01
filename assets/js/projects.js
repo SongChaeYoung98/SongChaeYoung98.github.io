@@ -43,7 +43,7 @@ let render_projects = (slug) => {
             title: '표정을 통한 감정 분석',
             demo: false,
             technologies: ['Pycharm', 'OpenCV', 'RNN', 'Python'],
-            description: "코드 복구 중, 업로드 지연",
+            description: "웹 캠 또는 영상 속 사람의 표정을 7가지로 분류 후 cnn을 이용하여 실시간으로 분석해내는 프로그램",
             categories: ['featured', 'webdev']
         },
         
