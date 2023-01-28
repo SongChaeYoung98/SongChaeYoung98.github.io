@@ -20,15 +20,6 @@ let render_projects = (slug) => {
             categories: ['featured', 'all']
         },
         {
-            image: 'assets/images/household-account.PNG',
-            link: 'https://github.com/SongChaeYoung98/household-account',
-            title: '안드로이드 가계부 앱',
-            demo: false,
-            technologies: ['Android Studio', 'JAVA'],
-            description: "캘린더 인터페이스에, 날짜 별 자본 소모 내역을 저장 할 수 있는 안드로이드 가계부 어플리케이션",
-            categories: ['featured', 'native']
-        },
-        {
             image: 'assets/images/voice-analysis.PNG',
             link: 'https://github.com/SongChaeYoung98/voice-emotion-analysis',
             title: '음성을 통한 감정 분석',
@@ -45,6 +36,24 @@ let render_projects = (slug) => {
             technologies: ['Pycharm', 'OpenCV', 'RNN', 'Python'],
             description: "웹 캠 또는 영상 속 사람의 표정을 7가지로 분류 후 cnn을 이용하여 실시간으로 분석해내는 프로그램",
             categories: ['featured', 'webdev']
+        },
+        {
+            image: 'assets/images/de-identification.gif',
+            link: 'https://github.com/SongChaeYoung98/real-time-face-de-identification',
+            title: '실시간 얼굴 비 식별화',
+            demo: false,
+            technologies: ['Python', 'OpenCV', 'tensorflow', 'keras'],
+            description: "웹 캠 또는 영상 속 특정 인물의 얼굴을 비 식별화 하는 프로그램",
+            categories: ['featured', 'webdev']
+        },
+        {
+            image: 'assets/images/household-account.PNG',
+            link: 'https://github.com/SongChaeYoung98/household-account',
+            title: '안드로이드 가계부 앱',
+            demo: false,
+            technologies: ['Android Studio', 'JAVA'],
+            description: "캘린더 인터페이스에, 날짜 별 자본 소모 내역을 저장 할 수 있는 안드로이드 가계부 어플리케이션",
+            categories: ['featured', 'native']
         },
         
     ]
