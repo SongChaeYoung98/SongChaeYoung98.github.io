@@ -38,7 +38,7 @@ let render_projects = (slug) => {
             categories: ['featured', 'webdev']
         },
         {
-            image: 'assets/images/de-iden.gif',
+            image: 'assets/images/de-iden2.gif',
             link: 'https://github.com/SongChaeYoung98/real-time-face-de-identification',
             title: '실시간 얼굴 비 식별화',
             demo: false,
