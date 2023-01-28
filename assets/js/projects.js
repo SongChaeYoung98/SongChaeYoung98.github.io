@@ -43,7 +43,7 @@ let render_projects = (slug) => {
             title: '실시간 얼굴 비 식별화',
             demo: false,
             technologies: ['Python', 'OpenCV', 'tensorflow', 'keras'],
-            description: "웹 캠 또는 영상 속 특정 인물의 얼굴을 비 식별화 하는 프로그램",
+            description: "웹 캠 또는 영상 속 특정 인물의 얼굴을 실시간으로 비 식별화 하는 프로그램",
             categories: ['featured', 'webdev']
         },
         {
