@@ -37,6 +37,19 @@
   margin-bottom: 32px;
 }
 
+.hero-title .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(22px) skewX(-4deg);
+  filter: blur(4px);
+  animation: char-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity, filter;
+}
+
+.hero-title .char[style*="width"] {  /* 공백 span */
+  animation: none;   /* 공백은 애니메이션 없이 자리만 차지 */
+}
+
 /* 1. 전체 너비 확장 + 균등 분배 */
 .hero-stats {
   display: flex;

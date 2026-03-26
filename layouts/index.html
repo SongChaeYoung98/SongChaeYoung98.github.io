@@ -48,6 +48,23 @@
   margin-bottom: 16px;
 }
 .hero-title .accent { color: #7c6af7; }
+
+/* ── 글자 단위 등장 애니메이션 ── */
+.hero-title .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(22px) skewX(-4deg);
+  filter: blur(4px);
+  animation: char-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity, filter;
+}
+@keyframes char-in {
+  to {
+    opacity: 1;
+    transform: translateY(0) skewX(0deg);
+    filter: blur(0px);
+  }
+}
 .hero-sub {
   font-size: 15px;
   color: var(--secondary);
@@ -534,7 +551,7 @@
 <section class="hero">
   <div class="hero-label">Engineering Blog</div>
 
-  <h1 class="hero-title">
+  <h1 class="hero-title" id="hero-title-anim">
     기획부터 배포까지,<br>
     <span class="accent">개발의 모든 흔적</span>
   </h1>
@@ -622,6 +639,77 @@ document.querySelectorAll('.stat-num').forEach(el => {
 
   update();
 });
+</script>
+
+<!-- 타이틀 글자 분리 애니메이션 -->
+<script>
+(function () {
+  const el = document.getElementById('hero-title-anim');
+  if (!el) return;
+
+  const BASE_DELAY = 0.01;   // 글자당 딜레이 (조금 더 부드럽게 조정 가능)
+  let charIndex = 0;
+
+  function wrapChars(node, isAccent) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const frag = document.createDocumentFragment();
+      for (const ch of node.textContent) {
+        const s = document.createElement('span');
+        s.className = 'char' + (isAccent ? ' accent' : '');
+        
+        if (ch === ' ') {
+          s.textContent = '\u00A0';           // ← 핵심: Non-breaking space 사용
+          s.style.display = 'inline-block';
+          s.style.width = '0.35em';           // 한글 기준 적당한 공백 너비 (필요시 조정)
+        } else {
+          s.textContent = ch;
+          s.style.animationDelay = (charIndex * BASE_DELAY + 0.04) + 's';
+        }
+        
+        frag.appendChild(s);
+        charIndex++;
+      }
+      return frag;
+    }
+    return null;
+  }
+
+  // 원본 childNodes 스냅샷
+  const children = Array.from(el.childNodes);
+  el.innerHTML = '';
+
+  children.forEach(node => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const frag = wrapChars(node, false);
+      if (frag) el.appendChild(frag);
+    } 
+    else if (node.nodeName === 'BR') {
+      el.appendChild(document.createElement('br'));
+    } 
+    else if (node.nodeName === 'SPAN' && node.classList.contains('accent')) {
+      const wrapper = document.createElement('span');
+      wrapper.style.display = 'inline';
+      
+      for (const ch of node.textContent) {
+        const s = document.createElement('span');
+        s.className = 'char accent';
+        
+        if (ch === ' ') {
+          s.textContent = '\u00A0';
+          s.style.display = 'inline-block';
+          s.style.width = '0.35em';
+        } else {
+          s.textContent = ch;
+          s.style.animationDelay = (charIndex * BASE_DELAY + 0.04) + 's';
+        }
+        
+        wrapper.appendChild(s);
+        charIndex++;
+      }
+      el.appendChild(wrapper);
+    }
+  });
+})();
 </script>
 
     <div class="contact-strip">
