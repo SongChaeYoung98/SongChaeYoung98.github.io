@@ -2,7 +2,7 @@
 title: asdf
 date: 2026-03-26
 lastmod: 2026-03-26
-draft: true
+draft: false
 description: ""
 categories:
   - architecture
