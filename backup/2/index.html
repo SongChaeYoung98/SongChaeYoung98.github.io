@@ -1,0 +1,795 @@
+{{- define "main" }}
+
+{{/* ── 전체 포스트 수집 ── */}}
+{{- $allPosts := where site.RegularPages "Type" "posts" }}
+{{- $totalCommits := 0 }}
+{{- range $allPosts }}
+  {{- with .Params.commits }}
+    {{- $totalCommits = add $totalCommits . }}
+  {{- end }}
+{{- end }}
+{{- $projectCount := len (where $allPosts "Params.categories" "intersect" (slice "project")) }}
+
+<style>
+/* ── Index 전용 스타일 ── */
+.home-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 0 80px;
+}
+
+/* ── Hero (신문 헤더 스타일) ── */
+.hero {
+  padding: 44px 0 0;
+  border-bottom: 1.5px solid var(--border-heavy, #0f0e0d);
+  margin-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.hero-left .hero-eyebrow {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+
+.hero-title {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 46px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text-1);
+  margin-bottom: 14px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+[data-theme="dark"] .hero-title em { color: var(--text-1); }
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--text-2);
+  line-height: 1.7;
+  max-width: 440px;
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+
+.hero-right {
+  text-align: right;
+  padding-bottom: 28px;
+  flex-shrink: 0;
+}
+
+.hero-right .hero-date {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  color: var(--text-2);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.hero-right .hero-role {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--text-2);
+}
+
+/* ── Stats row ── */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 0.5px solid var(--border);
+  border-right: 0.5px solid var(--border);
+  margin: 0 0 0;
+}
+
+.stat-item {
+  padding: 14px 0;
+  border-left: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  text-align: center;
+}
+
+.stat-num {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+  line-height: 1;
+}
+
+[data-theme="dark"] .stat-num {
+  font-family: var(--font-mono, monospace);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.stat-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 4px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[data-theme="dark"] .stat-label { color: var(--text-2); }
+
+/* ── Nav Pills ── */
+.filters {
+  display: flex;
+  gap: 6px;
+  padding: 14px 0;
+  border-bottom: 0.5px solid var(--border);
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+
+.filter-btn {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 13px;
+  border-radius: 2px;
+  border: 0.5px solid var(--border);
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.filter-btn:hover {
+  color: var(--text-1);
+  border-color: var(--border-heavy, #0f0e0d);
+}
+
+.filter-btn.active {
+  background: var(--text-1);
+  color: var(--bg-base);
+  border-color: var(--text-1);
+}
+
+/* ── 2-column grid ── */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 0;
+  margin-top: 0;
+}
+
+.col-main {
+  border-right: 0.5px solid var(--border);
+  padding-right: 2rem;
+  padding-top: 1.4rem;
+}
+
+.col-side {
+  padding-left: 1.6rem;
+  padding-top: 1.4rem;
+}
+
+/* ── Section Label ── */
+.section-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid var(--border);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+[data-theme="dark"] .section-label { color: var(--text-2); }
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 0.5px;
+  background: var(--border);
+}
+
+/* ── Featured post ── */
+.featured-post {
+  margin-bottom: 1.6rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.featured-badge {
+  display: inline-block;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--bg-base);
+  padding: 3px 9px;
+  margin-bottom: 12px;
+}
+
+[data-theme="dark"] .featured-badge {
+  background: var(--text-1);
+  color: var(--bg-base);
+}
+
+.featured-post h2 {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 28px !important;
+  font-weight: 400 !important;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-1) !important;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+[data-theme="dark"] .featured-post h2 {
+  font-family: var(--font-mono, monospace) !important;
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  color: var(--text-1) !important;
+}
+
+.featured-post .featured-desc {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  font-weight: 300;
+}
+
+.featured-post .featured-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+}
+
+[data-theme="dark"] .featured-post .featured-meta { color: var(--text-2); }
+
+.featured-meta-dot {
+  width: 2px;
+  height: 2px;
+  background: var(--text-3);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Post list items ── */
+.post-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: start;
+  padding: 13px 0;
+  border-bottom: 0.5px solid var(--border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.post-card:last-child { border-bottom: none; }
+
+.post-card:hover .post-card-title { color: var(--accent); }
+
+[data-theme="dark"] .post-card:hover .post-card-title { color: var(--text-1); opacity: 0.7; }
+
+.post-card-title {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--text-1);
+  transition: color 0.15s;
+}
+
+[data-theme="dark"] .post-card-title {
+  font-family: var(--font-mono, monospace);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+}
+
+.post-card-meta {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 3px;
+  letter-spacing: 0.04em;
+}
+
+[data-theme="dark"] .post-card-meta { color: var(--text-2); }
+
+.post-card-num {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--border-md, rgba(15,14,13,0.20));
+  line-height: 1;
+  padding-top: 2px;
+  letter-spacing: -0.02em;
+}
+
+[data-theme="dark"] .post-card-num {
+  font-family: var(--font-mono, monospace);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+/* ── Commit Log ── */
+.commit-item {
+  display: flex;
+  gap: 9px;
+  padding: 8px 0;
+  border-bottom: 0.5px solid var(--border);
+  align-items: flex-start;
+}
+
+.commit-item:last-child { border-bottom: none; }
+
+.commit-hash {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  color: var(--accent-green);
+  background: rgba(42, 96, 73, 0.08);
+  padding: 2px 6px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  letter-spacing: 0.06em;
+  border: 0.5px solid rgba(42, 96, 73, 0.16);
+}
+
+[data-theme="dark"] .commit-hash {
+  background: rgba(136, 196, 168, 0.10);
+  color: var(--accent-green);
+  border-color: rgba(136, 196, 168, 0.20);
+}
+
+.commit-body { flex: 1; min-width: 0; }
+
+.commit-msg {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.commit-type {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.commit-type.feat    { color: var(--accent-green); }
+.commit-type.fix     { color: var(--accent); }
+.commit-type.docs    { color: var(--accent-amber); }
+.commit-type.refactor{ color: var(--text-2); }
+
+[data-theme="dark"] .commit-type.fix     { color: var(--accent-amber); }
+[data-theme="dark"] .commit-type.refactor{ color: var(--text-2); }
+
+.commit-date {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+
+[data-theme="dark"] .commit-date { color: var(--text-2); }
+
+/* ── Project cards ── */
+.project-card {
+  border: 0.5px solid var(--border);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  position: relative;
+  text-decoration: none;
+  display: block;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--accent);
+}
+
+[data-theme="dark"] .project-card::before { background: var(--text-1); }
+
+.project-card:hover { border-color: var(--border-heavy, #0f0e0d); }
+
+.project-card:nth-child(3)::before { background: var(--accent-green); }
+
+[data-theme="dark"] .project-card:nth-child(3)::before { background: var(--text-2); }
+
+.proj-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 5px;
+}
+
+.proj-title {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-1);
+}
+
+[data-theme="dark"] .proj-title {
+  font-family: var(--font-mono, monospace);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-1);
+}
+
+.proj-status {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+
+.proj-status.live {
+  background: rgba(42, 96, 73, 0.08);
+  color: var(--accent-green);
+  border: 0.5px solid rgba(42, 96, 73, 0.16);
+}
+
+.proj-status.wip {
+  background: rgba(200, 75, 47, 0.08);
+  color: var(--accent);
+  border: 0.5px solid rgba(200, 75, 47, 0.16);
+}
+
+[data-theme="dark"] .proj-status.live {
+  background: rgba(168, 196, 184, 0.06);
+  color: var(--accent-green);
+  border-color: rgba(168, 196, 184, 0.14);
+}
+
+[data-theme="dark"] .proj-status.wip {
+  background: rgba(232, 228, 217, 0.05);
+  color: var(--text-2);
+  border-color: var(--border);
+}
+
+.proj-desc {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 8px;
+  font-weight: 300;
+}
+
+.proj-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.proj-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  padding: 2px 7px;
+  border: 0.5px solid var(--border);
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  background: var(--bg-surface);
+}
+
+[data-theme="dark"] .proj-tag { color: var(--text-2); border-color: var(--border-md); }
+
+/* ── Architecture diagram ── */
+.arch-box {
+  border: 0.5px solid var(--border-md, rgba(15,14,13,0.20));
+  border-left: 2px solid var(--border-heavy, #0f0e0d);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+}
+
+.arch-title {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+[data-theme="dark"] .arch-title { color: var(--text-2); }
+
+.arch-layers { display: flex; flex-direction: column; gap: 3px; }
+
+.arch-layer {
+  padding: 8px 10px;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-1);
+}
+
+.arch-layer.ui     { background: rgba(200, 75, 47, 0.05);  border-left: 2px solid var(--accent); }
+.arch-layer.logic  { background: rgba(138, 98, 0, 0.05);   border-left: 2px solid var(--accent-amber); }
+.arch-layer.data   { background: rgba(42, 96, 73, 0.05);   border-left: 2px solid var(--accent-green); }
+
+[data-theme="dark"] .arch-layer.ui    { background: rgba(237,233,222,0.04); border-left-color: var(--text-1); }
+[data-theme="dark"] .arch-layer.logic { background: rgba(237,233,222,0.03); border-left-color: var(--text-2); }
+[data-theme="dark"] .arch-layer.data  { background: rgba(237,233,222,0.02); border-left-color: var(--text-2); }
+
+.arch-arrow {
+  text-align: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: var(--text-3);
+  padding: 1px 0;
+}
+
+[data-theme="dark"] .arch-arrow { color: var(--text-2); }
+
+/* ── Light mode card tags ── */
+[data-theme="light"] .card-tag,
+:root:not([data-theme="dark"]) .card-tag {
+  background: rgba(15,14,13,0.04);
+  border-color: rgba(15,14,13,0.08);
+  color: var(--text-3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 680px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+  .col-main {
+    border-right: none;
+    padding-right: 0;
+    border-bottom: 1.5px solid var(--border-heavy, #0f0e0d);
+    padding-bottom: 2rem;
+  }
+  .col-side {
+    padding-left: 0;
+  }
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hero-right { text-align: left; padding-bottom: 0; }
+  .hero-title { font-size: 32px; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+
+<div class="home-wrap">
+
+  {{/* ── Hero ── */}}
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">// Engineering Blog</div>
+      <h1 class="hero-title">
+        기획부터 배포까지,<br>
+        <em>개발의 모든 흔적</em>
+      </h1>
+      <p class="hero-sub">설계 과정, 커밋 단위 개발 로그, 시스템 아키텍처를 기록합니다.</p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-date">{{ now.Format "2006. 01. 02" }}</div>
+      <div class="hero-role">Backend Engineer</div>
+    </div>
+  </section>
+
+  {{/* ── Stats ── */}}
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">{{ len $allPosts }}</div>
+      <div class="stat-label">Posts</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">{{ $projectCount }}</div>
+      <div class="stat-label">Projects</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">{{ if gt $totalCommits 0 }}{{ $totalCommits }}{{ else }}—{{ end }}</div>
+      <div class="stat-label">Commits</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">{{ len (where $allPosts "Params.series" "!=" nil) }}</div>
+      <div class="stat-label">Series</div>
+    </div>
+  </div>
+
+  {{/* ── Filters ── */}}
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterPosts(this, 'all')">All</button>
+    <button class="filter-btn" onclick="filterPosts(this, 'project')">Project</button>
+    <button class="filter-btn" onclick="filterPosts(this, 'devlog')">Dev Log</button>
+    <button class="filter-btn" onclick="filterPosts(this, 'architecture')">Architecture</button>
+  </div>
+
+  {{/* ── 2-column layout ── */}}
+  <div class="content-grid">
+
+    {{/* ── Left: Posts ── */}}
+    <div class="col-main">
+
+      {{/* Featured (최신 글) */}}
+      {{- $featured := index $allPosts.ByDate.Reverse 0 }}
+      {{- if $featured }}
+        <div class="section-label">featured</div>
+        <div class="featured-post">
+          {{- $fcat := "default" }}
+          {{- with $featured.Params.categories }}{{ $fcat = index . 0 }}{{ end }}
+          <div class="featured-badge">{{ upper $fcat }}</div>
+          <a href="{{ $featured.RelPermalink }}" style="text-decoration:none;">
+            <h2>{{ $featured.Title }}</h2>
+          </a>
+          <p class="featured-desc">
+            {{- with $featured.Description }}{{ . }}
+            {{- else }}{{ $featured.Summary | plainify | truncate 130 }}{{ end }}
+          </p>
+          <div class="featured-meta">
+            <span>{{ math.Round (div (len (split ($featured.Plain) " ")) 200) }} min read</span>
+            <span class="featured-meta-dot"></span>
+            <span>{{ $featured.Date.Format "2006. 01" }}</span>
+            {{- with $featured.Params.commits }}
+            <span class="featured-meta-dot"></span>
+            <span>{{ . }} commits</span>
+            {{- end }}
+          </div>
+        </div>
+      {{- end }}
+
+      <div class="section-label">recent posts</div>
+
+      <div id="post-list">
+        {{- range $i, $p := (after 1 $allPosts.ByDate.Reverse) }}
+          {{- $cat := "default" }}
+          {{- with $p.Params.categories }}{{ $cat = index . 0 }}{{ end }}
+          <a class="post-card" href="{{ $p.RelPermalink }}" data-cat="{{ $cat }}">
+            <div>
+              <div class="post-card-title">{{ $p.Title }}</div>
+              <div class="post-card-meta">{{ $cat }} · {{ $p.Date.Format "2006. 01" }}</div>
+            </div>
+            <div class="post-card-num">{{ printf "%02d" (add $i 1) }}</div>
+          </a>
+        {{- end }}
+      </div>
+
+    </div>
+
+    {{/* ── Right: Sidebar ── */}}
+    <div class="col-side">
+
+      {{/* Commit log — params.recentCommits 배열 or 예시 */}}
+      <div class="section-label">recent commits</div>
+
+      {{- $commits := site.Params.recentCommits }}
+      {{- if $commits }}
+        {{- range $commits }}
+          <div class="commit-item">
+            <span class="commit-hash">{{ .hash }}</span>
+            <div class="commit-body">
+              <div class="commit-msg">
+                <span class="commit-type {{ .commitType }}">{{ .commitType }}:</span>
+                {{ .message }}
+              </div>
+              <div class="commit-date">{{ .date }} · {{ .branch }}</div>
+            </div>
+          </div>
+        {{- end }}
+      {{- else }}
+        {{/* 커밋 데이터 없을 때 — 최근 포스트에서 추출 */}}
+        {{- range first 5 $allPosts.ByDate.Reverse }}
+          <div class="commit-item">
+            <span class="commit-hash">{{ substr (md5 .Title) 0 6 }}</span>
+            <div class="commit-body">
+              <div class="commit-msg">
+                <span class="commit-type feat">feat:</span>
+                {{ .Title | truncate 38 }}
+              </div>
+              <div class="commit-date">{{ .Date.Format "2006.01.02" }} · main</div>
+            </div>
+          </div>
+        {{- end }}
+      {{- end }}
+
+      {{/* Projects */}}
+      <div class="section-label" style="margin-top: 1.6rem;">projects</div>
+
+      {{- $projects := where $allPosts "Params.categories" "intersect" (slice "project") }}
+      {{- range first 3 $projects.ByDate.Reverse }}
+        {{- $status := "live" }}
+        {{- with .Params.status }}{{ $status = . }}{{ end }}
+        <a class="project-card" href="{{ .RelPermalink }}">
+          <div class="proj-header">
+            <div class="proj-title">{{ .Title }}</div>
+            <span class="proj-status {{ $status }}">
+              {{- if eq $status "live" }}● live{{- else }}◌ wip{{- end }}
+            </span>
+          </div>
+          <div class="proj-desc">
+            {{- with .Description }}{{ . | truncate 80 }}
+            {{- else }}{{ .Summary | plainify | truncate 80 }}{{ end }}
+          </div>
+          {{- with .Params.tags }}
+            <div class="proj-tags">
+              {{- range first 4 . }}
+                <span class="proj-tag">{{ . }}</span>
+              {{- end }}
+            </div>
+          {{- end }}
+        </a>
+      {{- end }}
+
+      {{/* Architecture — 가장 최근 architecture 글의 다이어그램 */}}
+      {{- $archPosts := where $allPosts "Params.categories" "intersect" (slice "architecture") }}
+      {{- if $archPosts }}
+        <div class="section-label" style="margin-top: 1.6rem;">system design</div>
+        {{- $archPost := index $archPosts.ByDate.Reverse 0 }}
+        <a href="{{ $archPost.RelPermalink }}" style="text-decoration:none;">
+          <div class="arch-box">
+            <div class="arch-title">// {{ $archPost.Title | truncate 36 }}</div>
+            <div class="arch-layers">
+              <div class="arch-layer ui">UI Layer — Frontend</div>
+              <div class="arch-arrow">↕ API</div>
+              <div class="arch-layer logic">Application Layer</div>
+              <div class="arch-arrow">↕ Events</div>
+              <div class="arch-layer data">Data Layer — DB + Cache</div>
+            </div>
+          </div>
+        </a>
+      {{- end }}
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function filterPosts(btn, type) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#post-list .post-card').forEach(card => {
+    card.style.display = (type === 'all' || card.dataset.cat === type) ? '' : 'none';
+  });
+}
+</script>
+
+{{- end }}

@@ -1,0 +1,166 @@
+baseURL = "https://SongChaeYoung98.github.io/"
+languageCode = "ko"
+title = "SongChaeYoung.dev"
+theme = "PaperMod"
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+
+[pagination]
+  pagerSize = 10
+
+[minify]
+  disableXML = true
+  minifyOutput = true
+
+[params]
+  env = "production"
+  title = "SongChaeYoung.dev"
+  description = "기획부터 배포까지, 개발의 모든 흔적"
+  keywords = ["Backend", "System Design", "DevLog", "Architecture"]
+  author = "SongChaeYoung"
+  DateFormat = "2006. 01. 02"
+  defaultTheme = "dark"        # dark | light | auto
+  disableThemeToggle = false
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = false
+  ShowRssButtonInSectionTermList = false
+  UseHugoToc = true
+  disableSpecial1stPost = true   # index.html이 featured를 직접 담당
+  disableScrollToTop = false
+  comments = false
+  hidemeta = false
+  hideSummary = false
+  showtoc = true
+  tocopen = false
+
+  # ── Home hero (PaperMod 기본 homeInfoParams — 커스텀 index.html에서 override됨)
+  [params.homeInfoParams]
+    Title = "기획부터 배포까지,"
+    Content = "설계 과정, 커밋 단위 개발 로그, 시스템 아키텍처를 기록하는 엔지니어링 블로그입니다."
+
+  # ── 최근 커밋 데이터 (hugo.toml에서 관리 — CI/CD로 자동 업데이트 가능)
+  # index.html에서 site.Params.recentCommits 로 읽힘
+  # 없으면 최신 포스트 제목으로 자동 대체됨
+  #
+  # [[params.recentCommits]]
+  #   hash       = "a3f91c"
+  #   commitType = "feat"
+  #   message    = "saga 오케스트레이터 패턴 구현"
+  #   date       = "2h ago"
+  #   branch     = "main"
+  #
+  # [[params.recentCommits]]
+  #   hash       = "b12e44"
+  #   commitType = "fix"
+  #   message    = "이벤트 중복 처리 idempotency 수정"
+  #   date       = "1d ago"
+  #   branch     = "main"
+  #
+  # [[params.recentCommits]]
+  #   hash       = "c9da70"
+  #   commitType = "docs"
+  #   message    = "아키텍처 의사결정 레코드 추가"
+  #   date       = "2d ago"
+  #   branch     = "docs"
+  #
+  # [[params.recentCommits]]
+  #   hash       = "d55bb1"
+  #   commitType = "refactor"
+  #   message    = "도메인 레이어 의존성 역전 적용"
+  #   date       = "3d ago"
+  #   branch     = "refactor"
+  #
+  # [[params.recentCommits]]
+  #   hash       = "e3119f"
+  #   commitType = "feat"
+  #   message    = "Redis pub/sub 기반 이벤트 브로커"
+  #   date       = "5d ago"
+  #   branch     = "feat/event"
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/SongChaeYoung98"
+
+  [params.assets]
+    disableHLJS = false
+    favicon = "/favicon.ico"
+    favicon16x16 = "/favicon-16x16.png"
+    favicon32x32 = "/favicon-32x32.png"
+    apple_touch_icon = "/apple-touch-icon.png"
+    safari_pinned_tab = "/safari-pinned-tab.svg"
+    # 커스텀 CSS 적용
+    customCSS = ["css/custom.css"]
+
+  [params.label]
+    text = "SongChaeYoung.dev"
+    icon = ""
+    iconHeight = 35
+
+  [params.cover]
+    hidden = false
+    hiddenInList = false
+    hiddenInSingle = false
+
+  [params.editPost]
+    URL = "https://github.com/SongChaeYoung98/SongChaeYoung98.github.io/edit/main/content"
+    Text = "Edit"
+    appendFilePath = true
+
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 0
+    limit = 10
+    keys = ["title", "permalink", "summary", "content"]
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "/posts/"
+    weight = 10
+  [[menu.main]]
+    identifier = "projects"
+    name = "Projects"
+    url = "/projects/"
+    weight = 20
+  [[menu.main]]
+    identifier = "tags"
+    name = "Tags"
+    url = "/tags/"
+    weight = 30
+  [[menu.main]]
+    identifier = "search"
+    name = "Search"
+    url = "/search/"
+    weight = 40
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+  series = "series"
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    noClasses = false
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = true
+    lineNos = false
+    # 라이트: 크림 페이퍼 / 다크: 모노크롬 저널 모두 잘 어울리는 스타일
+    style = "monokailight"
