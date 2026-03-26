@@ -1,0 +1,490 @@
+/* ============================================================
+   SongChaeYoung.dev — Custom Theme Override (PaperMod)
+   Minimal Tech Dark · Day/Dark 완전 지원
+   ============================================================ */
+
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+
+/* ── Design Tokens ── */
+:root {
+  --font-base: 'Geist', -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', 'Fira Code', monospace;
+
+  /* Accent */
+  --accent:       #7c6af7;
+  --accent-dim:   rgba(124, 106, 247, 0.12);
+  --accent-green: #5de8c1;
+  --accent-amber: #f4a942;
+
+  /* Radius */
+  --r-sm:  6px;
+  --r-md:  10px;
+  --r-lg:  14px;
+
+  /* Transition */
+  --t: 0.15s ease;
+}
+
+/* ── Dark Mode (Default) ── */
+[data-theme="dark"] {
+  --bg-base:    #0a0a0b;
+  --bg-surface: #111113;
+  --bg-hover:   #161619;
+  --bg-code:    #0d0d0f;
+
+  --border:     rgba(255, 255, 255, 0.08);
+  --border-md:  rgba(255, 255, 255, 0.14);
+
+  --text-1: #f0f0f0;
+  --text-2: #888888;
+  --text-3: #4a4a50;
+
+  --tag-bg:   rgba(124, 106, 247, 0.12);
+  --tag-text: #9f8fff;
+}
+
+/* ── Light Mode ── */
+[data-theme="light"], :root:not([data-theme="dark"]) {
+  --bg-base:    #fafafa;
+  --bg-surface: #ffffff;
+  --bg-hover:   #f4f4f8;
+  --bg-code:    #f6f6f9;
+
+  --border:     rgba(0, 0, 0, 0.07);
+  --border-md:  rgba(0, 0, 0, 0.13);
+
+  --text-1: #0a0a0b;
+  --text-2: #666666;
+  --text-3: #aaaaaa;
+
+  --tag-bg:   rgba(90, 79, 208, 0.08);
+  --tag-text: #5a4fd0;
+}
+
+/* ── Base ── */
+body {
+  font-family: var(--font-base);
+  background: var(--bg-base);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Layout ── */
+.main { max-width: 780px !important; }
+
+/* ── Header / Nav ── */
+#top-link,
+.logo a,
+.nav a {
+  font-family: var(--font-base);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+header.header {
+  background: var(--bg-base) !important;
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo a {
+  font-size: 15px;
+  color: var(--text-1) !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo a::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.nav a {
+  font-size: 13px;
+  color: var(--text-2) !important;
+  font-weight: 400;
+  transition: color var(--t);
+  padding: 4px 0;
+}
+
+.nav a:hover { color: var(--text-1) !important; }
+
+/* ── Theme Toggle ── */
+#theme-toggle {
+  border: 1px solid var(--border-md) !important;
+  border-radius: 999px !important;
+  padding: 4px 8px !important;
+  background: var(--bg-surface) !important;
+  color: var(--text-2) !important;
+  font-size: 12px !important;
+  transition: all var(--t) !important;
+}
+
+#theme-toggle:hover {
+  color: var(--text-1) !important;
+  border-color: var(--accent) !important;
+}
+
+/* ── Home Hero ── */
+.first-entry .entry-header h1,
+.home-info .home-info-title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+  color: var(--text-1);
+}
+
+.home-info p {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.7;
+}
+
+/* ── Post List Cards ── */
+.post-entry {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 20px 22px;
+  margin-bottom: 8px;
+  transition: all var(--t);
+  position: relative;
+  overflow: hidden;
+}
+
+.post-entry::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity var(--t);
+}
+
+.post-entry:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-md);
+  transform: translateY(-1px);
+}
+
+.post-entry:hover::before { opacity: 1; }
+
+.entry-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--text-1);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.entry-content p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.65;
+}
+
+.entry-footer {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.entry-link::after {
+  color: var(--text-3);
+  transition: transform var(--t), color var(--t);
+}
+
+.post-entry:hover .entry-link::after {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+
+/* ── Post Meta (date, readtime…) ── */
+.post-meta {
+  font-size: 12px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+}
+
+/* ── Tags / Categories ── */
+.post-tags a,
+.terms-tags a {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: var(--r-sm);
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  border: 1px solid transparent;
+  transition: all var(--t);
+  text-decoration: none;
+}
+
+.post-tags a:hover,
+.terms-tags a:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* ── Single Post ── */
+.post-header {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.post-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.25;
+  color: var(--text-1);
+}
+
+/* ── Post Body Typography ── */
+.post-content {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-1);
+}
+
+.post-content h1,
+.post-content h2,
+.post-content h3 {
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+  margin: 2.2em 0 0.8em;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-content h2 { font-size: 20px; }
+.post-content h3 { font-size: 17px; border-bottom: none; }
+
+.post-content p { margin-bottom: 1.2em; }
+
+.post-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity var(--t);
+}
+
+.post-content a:hover { opacity: 0.75; }
+
+/* ── Blockquote ── */
+.post-content blockquote {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-dim);
+  padding: 14px 18px;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  margin: 1.6em 0;
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+/* ── Inline Code ── */
+.post-content code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: rgba(93, 232, 193, 0.09);
+  color: var(--accent-green);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(93, 232, 193, 0.18);
+}
+
+/* ── Code Block ── */
+.highlight {
+  border-radius: var(--r-md) !important;
+  border: 1px solid var(--border) !important;
+  overflow: hidden;
+  margin: 1.6em 0;
+}
+
+.highlight pre {
+  background: var(--bg-code) !important;
+  padding: 18px 20px !important;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* Code copy button */
+.highlight:hover .copy-code {
+  opacity: 1;
+}
+
+.copy-code {
+  opacity: 0;
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-sm) !important;
+  color: var(--text-2) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  transition: all var(--t) !important;
+}
+
+.copy-code:hover {
+  color: var(--text-1) !important;
+  border-color: var(--accent) !important;
+}
+
+/* ── Table ── */
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 1.6em 0;
+}
+
+.post-content th {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  font-weight: 500;
+  color: var(--text-2);
+  text-align: left;
+}
+
+.post-content td {
+  border: 1px solid var(--border);
+  padding: 9px 14px;
+  color: var(--text-1);
+}
+
+.post-content tr:hover td { background: var(--bg-hover); }
+
+/* ── TOC ── */
+#TableOfContents {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px 20px;
+  font-size: 13px;
+}
+
+#TableOfContents a {
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color var(--t);
+}
+
+#TableOfContents a:hover { color: var(--accent); }
+
+/* ── Breadcrumb ── */
+.breadcrumbs {
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--text-3);
+}
+
+.breadcrumbs a { color: var(--text-3); }
+.breadcrumbs a:hover { color: var(--accent); }
+
+/* ── Pagination ── */
+.pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.page-link {
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  color: var(--text-2);
+  background: var(--bg-surface);
+  transition: all var(--t);
+}
+
+.page-link:hover {
+  color: var(--text-1);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* ── Search ── */
+#searchInput {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-md) !important;
+  color: var(--text-1) !important;
+  font-family: var(--font-base) !important;
+  font-size: 14px !important;
+  padding: 10px 16px !important;
+  transition: border-color var(--t) !important;
+}
+
+#searchInput:focus {
+  border-color: var(--accent) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(124, 106, 247, 0.12) !important;
+}
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--border) !important;
+  font-size: 12px !important;
+  color: var(--text-3) !important;
+  font-family: var(--font-mono) !important;
+  padding: 20px 0 !important;
+}
+
+/* ── Series / Callout box ── */
+.post-content .callout,
+.series-posts {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px 20px;
+  margin: 1.6em 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .post-title { font-size: 22px; }
+  .post-entry { padding: 16px 18px; }
+  .home-info .home-info-title { font-size: 24px; }
+}
+
+/* ── Commit Badge (custom class for devlog) ── */
+.commit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: rgba(93, 232, 193, 0.08);
+  color: var(--accent-green);
+  border: 1px solid rgba(93, 232, 193, 0.18);
+}
+
+.commit-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--accent-green);
+  display: inline-block;
+}

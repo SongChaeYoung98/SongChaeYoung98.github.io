@@ -1,0 +1,292 @@
+{{- define "main" }}
+
+{{/* ── 전체 포스트 수집 ── */}}
+{{- $allPosts := where site.RegularPages "Type" "posts" }}
+{{- $totalCommits := 0 }}
+{{- range $allPosts }}
+  {{- with .Params.commits }}
+    {{- $totalCommits = add $totalCommits . }}
+  {{- end }}
+{{- end }}
+
+<style>
+/* ── Index 전용 스타일 ── */
+.home-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 0 60px;
+}
+
+/* Hero */
+.hero {
+  padding: 52px 0 44px;
+}
+.hero-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin-bottom: 16px;
+  font-family: var(--font-mono, monospace);
+}
+.hero-title {
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.18;
+  color: var(--primary);
+  margin-bottom: 14px;
+}
+.hero-title .accent { color: #7c6af7; }
+.hero-sub {
+  font-size: 14px;
+  color: var(--secondary);
+  line-height: 1.7;
+  max-width: 500px;
+  margin-bottom: 28px;
+}
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  padding-top: 4px;
+}
+.stat-num {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--primary);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--secondary);
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
+  background: transparent;
+  color: var(--secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.filter-btn:hover {
+  color: var(--primary);
+  border-color: rgba(124,106,247,0.5);
+}
+.filter-btn.active {
+  background: rgba(124,106,247,0.12);
+  color: #9f8fff;
+  border-color: rgba(124,106,247,0.5);
+}
+
+/* Post cards */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.post-card {
+  background: var(--entry);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: 10px;
+  padding: 20px 22px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  display: block;
+}
+.post-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: #7c6af7;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.post-card:hover {
+  border-color: rgba(255,255,255,0.15);
+  transform: translateY(-1px);
+}
+.post-card:hover::before { opacity: 1; }
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.card-badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.badge-project  { background: rgba(124,106,247,0.12); color: #9f8fff; }
+.badge-devlog   { background: rgba(93,232,193,0.10);  color: #5de8c1; }
+.badge-architecture { background: rgba(244,169,66,0.12); color: #f4a942; }
+.badge-default  { background: rgba(255,255,255,0.07); color: var(--secondary); }
+
+.card-date {
+  font-size: 12px;
+  color: var(--secondary);
+  font-family: var(--font-mono, monospace);
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--primary);
+  line-height: 1.4;
+  margin-bottom: 7px;
+}
+.card-desc {
+  font-size: 13px;
+  color: var(--secondary);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.card-tag {
+  font-size: 11px;
+  padding: 2px 9px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.05);
+  color: var(--secondary);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+[data-theme="light"] .card-tag {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.08);
+  color: #666;
+}
+
+/* Light mode overrides */
+[data-theme="light"] .filter-btn.active {
+  background: rgba(90,79,208,0.08);
+  color: #5a4fd0;
+  border-color: rgba(90,79,208,0.4);
+}
+[data-theme="light"] .post-card::before { background: #5a4fd0; }
+[data-theme="light"] .badge-project  { background: rgba(90,79,208,0.08);  color: #5a4fd0; }
+[data-theme="light"] .badge-devlog   { background: rgba(14,154,114,0.08); color: #0e9a72; }
+[data-theme="light"] .badge-architecture { background: rgba(180,120,0,0.08); color: #a07800; }
+[data-theme="light"] .hero-title .accent { color: #5a4fd0; }
+
+@media (max-width: 600px) {
+  .hero-title { font-size: 28px; }
+  .hero-stats { gap: 20px; }
+  .stat-num { font-size: 20px; }
+}
+</style>
+
+<div class="home-wrap">
+
+  {{/* ── Hero ── */}}
+  <section class="hero">
+    <div class="hero-label">Engineering Blog</div>
+    <h1 class="hero-title">
+      기획부터 배포까지,<br>
+      <span class="accent">개발의 모든 흔적</span>
+    </h1>
+    <p class="hero-sub">프로젝트 설계 과정, 커밋 단위 개발 로그, 시스템 아키텍처를 기록합니다.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">{{ len $allPosts }}</div>
+        <div class="stat-label">Posts</div>
+      </div>
+      <div>
+        <div class="stat-num">{{ len (where $allPosts "Params.categories" "intersect" (slice "project")) }}</div>
+        <div class="stat-label">Projects</div>
+      </div>
+      <div>
+        <div class="stat-num">{{ if gt $totalCommits 0 }}{{ $totalCommits }}{{ else }}—{{ end }}</div>
+        <div class="stat-label">Commits</div>
+      </div>
+    </div>
+  </section>
+
+  {{/* ── Filters ── */}}
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterPosts(this, 'all')">All</button>
+    <button class="filter-btn" onclick="filterPosts(this, 'project')">🗂 Project</button>
+    <button class="filter-btn" onclick="filterPosts(this, 'devlog')">📝 Dev Log</button>
+    <button class="filter-btn" onclick="filterPosts(this, 'architecture')">⚙️ Architecture</button>
+  </div>
+
+  {{/* ── Post List ── */}}
+  <div class="post-list" id="post-list">
+    {{- range $allPosts.ByDate.Reverse }}
+      {{- $cats := .Params.categories }}
+      {{- $cat := "default" }}
+      {{- if $cats }}{{ $cat = index $cats 0 }}{{ end }}
+      {{- $badgeClass := printf "badge-%s" $cat }}
+      {{- $badgeLabel := $cat }}
+      {{- if eq $cat "project" }}{{ $badgeLabel = "PROJECT" }}
+      {{- else if eq $cat "devlog" }}{{ $badgeLabel = "DEV LOG" }}
+      {{- else if eq $cat "architecture" }}{{ $badgeLabel = "ARCHITECTURE" }}
+      {{- else }}{{ $badgeLabel = upper $cat }}{{ end }}
+
+      <a class="post-card" href="{{ .RelPermalink }}" data-cat="{{ $cat }}">
+        <div class="card-meta">
+          <span class="card-badge {{ $badgeClass }}">{{ $badgeLabel }}</span>
+          <span class="card-date">{{ .Date.Format "2006. 01. 02" }}</span>
+        </div>
+        <div class="card-title">{{ .Title }}</div>
+        {{- with .Description }}
+          <div class="card-desc">{{ . }}</div>
+        {{- else }}
+          {{- with .Summary }}
+            <div class="card-desc">{{ . | plainify | truncate 120 }}</div>
+          {{- end }}
+        {{- end }}
+        {{- with .Params.tags }}
+          <div class="card-tags">
+            {{- range first 5 . }}
+              <span class="card-tag">{{ . }}</span>
+            {{- end }}
+          </div>
+        {{- end }}
+      </a>
+    {{- end }}
+  </div>
+
+</div>
+
+<script>
+function filterPosts(btn, type) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.post-card').forEach(card => {
+    if (type === 'all' || card.dataset.cat === type) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+
+{{- end }}

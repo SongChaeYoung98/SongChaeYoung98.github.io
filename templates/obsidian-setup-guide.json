@@ -1,0 +1,46 @@
+{
+  "obsidian-setup": "블로그 작성 환경 세팅 가이드",
+
+  "recommended-plugins": {
+    "core": [
+      "Templates (기본 내장)",
+      "Daily Notes (선택)"
+    ],
+    "community": [
+      "Templater - 동적 템플릿 자동화",
+      "Obsidian Git - 자동 커밋/푸시",
+      "Dataview - 포스트 목록 쿼리",
+      "Excalidraw - 아키텍처 다이어그램",
+      "Mermaid Tools - 다이어그램 미리보기"
+    ]
+  },
+
+  "folder-structure": {
+    "content/posts/": "Hugo 포스트 (실제 발행)",
+    "templates/": "Obsidian 작성 템플릿",
+    "_drafts/": "초안 (hugo draft:true 상태)"
+  },
+
+  "obsidian-git-settings": {
+    "설명": "저장 시 자동 커밋 설정",
+    "Auto commit interval": 10,
+    "Auto push interval": 0,
+    "Commit message": "docs: update blog posts {{date}}",
+    "Pull on startup": true
+  },
+
+  "templater-settings": {
+    "Template folder": "templates",
+    "Trigger Templater on new file creation": true,
+    "Enable folder templates": true,
+    "Folder templates": {
+      "content/posts": "templates/new-post"
+    }
+  },
+
+  "dataview-snippets": {
+    "전체 포스트 목록": "```dataview\nTABLE date, categories, tags\nFROM \"content/posts\"\nSORT date DESC\n```",
+    "초안 목록": "```dataview\nTABLE date, categories\nFROM \"content/posts\"\nWHERE draft = true\nSORT date DESC\n```",
+    "태그별 그룹": "```dataview\nTABLE rows.file.link, rows.date\nFROM \"content/posts\"\nGROUP BY tags\n```"
+  }
+}

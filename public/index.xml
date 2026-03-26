@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>SongChaeYoung.dev</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on SongChaeYoung.dev</description>
+    <generator>Hugo</generator>
+    <language>ko</language>
+    <lastBuildDate>Thu, 26 Mar 2026 11:26:45 +0900</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Test</title>
+      <link>http://localhost:1313/posts/test/</link>
+      <pubDate>Thu, 26 Mar 2026 11:26:45 +0900</pubDate>
+      <guid>http://localhost:1313/posts/test/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>asdf</title>
+      <link>http://localhost:1313/posts/2026-03-26-project-asdf/</link>
+      <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2026-03-26-project-asdf/</guid>
+      <description>&lt;!-- 여기에 내용 작성 --&gt;
+&lt;p&gt;asafdsdfsa&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Templete Test 1</title>
+      <link>http://localhost:1313/posts/2026-03-26-project-hello/</link>
+      <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/2026-03-26-project-hello/</guid>
+      <description>Templete Test</description>
+    </item>
+    <item>
+      <title>첫 글</title>
+      <link>http://localhost:1313/posts/first-post/</link>
+      <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/first-post/</guid>
+      <description>&lt;h1 id=&#34;hello-world&#34;&gt;Hello World!&lt;/h1&gt;
+&lt;p&gt;My First Blog Post.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
