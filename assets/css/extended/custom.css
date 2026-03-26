@@ -37,32 +37,27 @@
   margin-bottom: 32px;
 }
 
-/* ── Hero Stats — 가장 긴 .stat-sub(.context) 기준으로 완전 동일 너비 (flex 방식) ───────────────────────────── */
+/* 1. 전체 너비 확장 + 균등 분배 */
 .hero-stats {
-  display: flex;                    /* grid → flex 변경 (더 안정적이고 자동 균등 분배) */
-  width: 100%;
-  max-width: 780px;
-  min-width: 255
+  display: flex;
+  gap: 0;
   border: 1px solid var(--border, rgba(255,255,255,0.08));
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
-  height: 160px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  width: 100%;        /* fit-content → 100% */
+  max-width: 780px;   /* 추가 */
 }
 
+/* 2. 각 칸 균등 너비 + 바 공간 확보 */
 .hero-stat {
-  flex: 1;
-  min-width: 300px;           /* ← 핵심! 여기서 최소 너비 지정 */
-                              /* "작성된 포스트 수" 같은 긴 context 기준으로 조정하세요 */
-                              /* 250px ~ 280px 사이에서 테스트하면서 맞추면 됩니다 */
+  flex: 1 1 0;                        /* 균등 분배 */
+  min-width: 0;                       /* 100px 제거 */
+  padding: 14px 20px 28px 20px;       /* bottom에 바 공간 확보 */
   position: relative;
-  padding: 18px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  border-right: 1px solid var(--border, rgba(255,255,255,0.08));
   box-sizing: border-box;
-  transition: background 0.25s ease;
 }
+.hero-stat:last-child { border-right: none; }
 
 .hero-stat:hover {
   background: rgba(255, 255, 255, 0.02);
@@ -104,17 +99,23 @@
 
 /* 숫자 */
 .stat-num {
-  font-size: 36px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--primary);
   line-height: 1;
-  font-variant-numeric: tabular-nums;
-  color: var(--accent);
   font-family: var(--font-mono, monospace);
-  margin-bottom: 8px;
-  text-shadow:
-    0 0 6px color-mix(in srgb, var(--accent) 60%, transparent),
-    0 0 14px color-mix(in srgb, var(--accent) 30%, transparent);
+  margin-bottom: 6px;   /* 추가 */
+}
+
+/* 4. stat-label(context)에 white-space: nowrap으로 줄바꿈 방지 */
+.stat-label {
+  font-size: 11px;
+  color: var(--secondary);
+  margin-top: 5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;   /* 추가 — 한 줄 강제 */
 }
 
 .hero-stat:hover .stat-num {

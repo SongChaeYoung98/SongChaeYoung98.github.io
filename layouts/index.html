@@ -13,7 +13,7 @@
    HOME — index 전용
 ═══════════════════════════════════════════ */
 .home-wrap {
-  max-width: 900px;
+  max-width: 780px;
   margin: 0 auto;
   padding: 0 0 100px;
 }
@@ -61,12 +61,22 @@
   border: 1px solid var(--border, rgba(255,255,255,0.08));
   border-radius: 10px;
   overflow: hidden;
-  width: fit-content;
+  width: 63%;
+  /* margin: 0 auto 제거 — 제목과 좌측 기준선 일치 */
+}
+[data-theme="light"] .hero-stats {
+  border-color: rgba(0,0,0,0.13);   /* light 모드 외곽 테두리 */
 }
 .hero-stat {
-  padding: 14px 28px;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 14px 20px 36px;
   border-right: 1px solid var(--border, rgba(255,255,255,0.08));
-  min-width: 100px;
+  position: relative;
+  box-sizing: border-box;
+}
+[data-theme="light"] .hero-stat {
+  border-right-color: rgba(0,0,0,0.10);  /* light 모드 구분선 */
 }
 .hero-stat:last-child { border-right: none; }
 .stat-num {
@@ -76,6 +86,7 @@
   color: var(--primary);
   line-height: 1;
   font-family: var(--font-mono, monospace);
+  margin-bottom: 6px;
 }
 .stat-label {
   font-size: 11px;
@@ -83,6 +94,9 @@
   margin-top: 5px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  white-space: nowrap;  /* 한 줄 강제 — 두 줄 방지 */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ── Contact strip ── */
@@ -586,7 +600,7 @@
       </div>
     </div>
 
-  </div>
+  </div><!-- /hero-stats -->
 </section>
 
 <!-- 숫자 카운팅 -->
