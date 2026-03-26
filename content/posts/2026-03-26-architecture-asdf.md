@@ -1,12 +1,14 @@
 ---
-title: Templete Test 1
+title: asdf
 date: 2026-03-26
 lastmod: 2026-03-26
 draft: true
-description: Templete Test
+description: ""
 categories:
-  - devlog
+  - architecture
 tags: []
 showToc: true
 ---
-Templete Testasdf
+
+<!-- 여기에 내용 작성 -->
+asdsadfsafd

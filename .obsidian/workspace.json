@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/2026-03-26-project-asdf.md",
+                "file": "content/posts/2026-03-26-architecture-asdf.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-03-26-project-asdf"
+              "title": "2026-03-26-architecture-asdf"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "content/posts/2026-03-26-project-asdf.md",
+                "file": "content/posts/2026-03-26-architecture-asdf.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for 2026-03-26-project-asdf"
+              "title": "Backlinks for 2026-03-26-architecture-asdf"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "content/posts/2026-03-26-project-asdf.md",
+                "file": "content/posts/2026-03-26-architecture-asdf.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from 2026-03-26-project-asdf"
+              "title": "Outgoing links from 2026-03-26-architecture-asdf"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "content/posts/2026-03-26-project-asdf.md",
+                "file": "content/posts/2026-03-26-architecture-asdf.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2026-03-26-project-asdf"
+              "title": "Outline of 2026-03-26-architecture-asdf"
             }
           }
         ]
@@ -187,12 +187,13 @@
   },
   "active": "8357f97e6a1192ed",
   "lastOpenFiles": [
+    "content/posts/2026-03-26-project-hello.md",
+    "content/posts/2026-03-26-architecture-asdf.md",
+    "content/posts/2026-03-26-project-asdf.md",
     "public/posts/2026-03-26-project-asdf/index.html",
     "public/posts/2026-03-26-project-asdf",
     "public/posts/untitled/index.html",
     "public/posts/untitled",
-    "content/posts/2026-03-26-project-hello.md",
-    "content/posts/2026-03-26-project-asdf.md",
     "templates/architecture-post.md",
     "layouts/index.html",
     "public/assets/css/stylesheet.d1ae0eeb0eae660df6487d26e6669dd389a9a320ab3fa19fb5cbdc106789f9ff.css",
@@ -200,7 +201,6 @@
     "public/index.json",
     "public/page/1/index.html",
     "public/page/1",
-    "public/page",
     "Welcome.md",
     "content/posts/asdf.md",
     "SETUP-README.md",
