@@ -53,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "commit",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -74,7 +74,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -187,6 +188,18 @@
   },
   "active": "8357f97e6a1192ed",
   "lastOpenFiles": [
+    "backup/3/화면 캡처 2026-03-27 123557.png",
+    "backup/3/화면 캡처 2026-03-27 123541.png",
+    "backup/3/index.html",
+    "backup/3/custom.css",
+    "templates/new-til-post.md",
+    "templates/devlog-post.md",
+    "templates/new-troubleshooting-post.md",
+    "templates/project-post.md",
+    "templates/new-post.md",
+    "templates/new-new-post.md",
+    "templates/new-mindmap-post.md",
+    "README.md",
     "public/assets/css/stylesheet.4f812aaaaa12f5d000bec80ee8411211c440ecdb40a0ed2fd5aeacb67a0654a2.css",
     "public/assets/css/stylesheet.9c0e0d4ac173719608194e0b39a47e3335ffc11d84f13bb6d39dcb1d092c4fff.css",
     "public/assets/css/stylesheet.8e6a6397cd8333b387d66d5eb381c7e1b3ae1dcf413e4e92416cf5ca146d8207.css",
@@ -195,36 +208,25 @@
     "public/assets/css/stylesheet.0e04dce36376978950419e19ca2038989bd2cdc9ee63f3a5d7da853f306bba90.css",
     "public/assets/css/stylesheet.dc4a9723b1b48d335d57d6c9317fb14cf5947dcd11c913f5038d88c686735849.css",
     "public/assets/css/stylesheet.f174376edbc6975802c553d23ce4a094572282a4aab3669f1d19fbff0e65e6a6.css",
-    "public/assets/css/stylesheet.6a50989f6843dfd4c33d5543683354bfcb9da8f4a8800e73952260c31493e353.css",
-    "public/assets/css/stylesheet.43736291086342d4f8274d74882223cac54ed02cf388eb7b3d0a170563b7582f.css",
-    "public/assets/css/stylesheet.66250dbbd1f53f6459f147ba3a542987fc47ca75f4042579ed33a954d921bf34.css",
-    "templates/new-mindmap-post.md",
     "templates/new-reading-post.md",
     "templates/new-retrospective-post.md",
-    "templates/new-troubleshooting-post.md",
-    "templates/new-til-post.md",
-    "templates/new-new-post.md",
     "backup/1/화면 캡처 2026-03-26 204333.png",
     "backup/1/화면 캡처 2026-03-26 204319.png",
     "backup/2/화면 캡처 2026-03-26 204308.png",
     "backup/2/화면 캡처 2026-03-26 204240.png",
     "content/posts/2026-03-26-project-hello.md",
-    "README.md",
     "SETUP-README.md",
     "Welcome.md",
     "content/posts/2026-03-26-project-asdf.md",
     "content/posts/2026-03-26-architecture-asdf.md",
     "templates/architecture-post.md",
     "content/posts/asdf.md",
-    "templates/new-post.md",
     "content/posts/First Post.md",
     "content/SETUP-README.md",
     "content/templates/project-post.md",
     "content/templates/new-post.md",
     "content/templates/devlog-post.md",
     "content/templates/architecture-post.md",
-    "templates/project-post.md",
-    "templates/devlog-post.md",
     "templates/post.md",
     "content/posts/test.md"
   ]

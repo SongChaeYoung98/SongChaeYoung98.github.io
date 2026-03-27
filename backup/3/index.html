@@ -1,0 +1,1022 @@
+{{- define "main" }}
+
+{{/* ── 데이터 수집 ── */}}
+{{- $allPosts    := where site.RegularPages "Type" "posts" }}
+{{- $allProjects := where site.RegularPages "Type" "projects" }}
+{{- $totalCommits := 0 }}
+{{- range $allPosts }}
+  {{- with .Params.commits }}{{- $totalCommits = add $totalCommits . }}{{- end }}
+{{- end }}
+
+<style>
+/* ═══════════════════════════════════════════
+   HOME — index 전용
+═══════════════════════════════════════════ */
+.home-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 0 100px;
+}
+
+/* ── Hero ── */
+.hero { padding: 56px 0 44px; }
+.hero-label {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin-bottom: 18px;
+  font-family: var(--font-mono, monospace);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-label::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: var(--secondary);
+  display: inline-block;
+  opacity: 0.5;
+}
+.hero-title {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.18;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+.hero-title .accent { color: #7c6af7; }
+
+/* ── 글자 단위 등장 애니메이션 ── */
+.hero-title .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(22px) skewX(-4deg);
+  filter: blur(4px);
+  animation: char-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity, filter;
+}
+@keyframes char-in {
+  to {
+    opacity: 1;
+    transform: translateY(0) skewX(0deg);
+    filter: blur(0px);
+  }
+}
+.hero-sub {
+  font-size: 15px;
+  color: var(--secondary);
+  line-height: 1.75;
+  max-width: 500px;
+  margin-bottom: 32px;
+}
+.hero-stats {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: 10px;
+  overflow: hidden;
+  /* width: 63%; */
+  /* margin: 0 auto 제거 — 제목과 좌측 기준선 일치 */
+}
+[data-theme="light"] .hero-stats {
+  border-color: rgba(0,0,0,0.13);   /* light 모드 외곽 테두리 */
+}
+.hero-stat {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 14px 20px 36px;
+  border-right: 1px solid var(--border, rgba(255,255,255,0.08));
+  position: relative;
+  box-sizing: border-box;
+}
+[data-theme="light"] .hero-stat {
+  border-right-color: rgba(0,0,0,0.10);  /* light 모드 구분선 */
+}
+.hero-stat:last-child { border-right: none; }
+.stat-num {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--primary);
+  line-height: 1;
+  font-family: var(--font-mono, monospace);
+  margin-bottom: 6px;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--secondary);
+  margin-top: 5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;  /* 한 줄 강제 — 두 줄 방지 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Contact strip ── */
+.contact-strip {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--secondary);
+  text-decoration: none;
+  font-family: var(--font-mono, monospace);
+  transition: color 0.15s;
+}
+.contact-link:hover { color: var(--primary); }
+.contact-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ── Section ── */
+.section-block { margin-bottom: 52px; }
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  font-family: var(--font-mono, monospace);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #7c6af7;
+  display: inline-block;
+}
+.section-link {
+  font-size: 12px;
+  color: var(--secondary);
+  text-decoration: none;
+  font-family: var(--font-mono, monospace);
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.section-link:hover { color: #7c6af7; }
+.section-link::after { content: ' →'; }
+
+/* ── Ad slot ── */
+.ad-slot {
+  border: 1px dashed var(--border, rgba(255,255,255,0.1));
+  border-radius: 10px;
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--secondary);
+  font-family: var(--font-mono, monospace);
+  margin-bottom: 48px;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── Projects grid ── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.project-card {
+  background: var(--entry);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: 10px;
+  padding: 20px 22px;
+  text-decoration: none;
+  display: block;
+  transition: border-color 0.15s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.project-card:hover { transform: translateY(-1px); border-color: rgba(124,106,247,0.50); }
+[data-theme="light"] .project-card:hover { border-color: rgba(90,79,208,0.40); }
+.project-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5de8c1;
+  font-family: var(--font-mono, monospace);
+  margin-bottom: 10px;
+}
+[data-theme="light"] .project-status { color: #0e9a72; }
+.project-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #5de8c1;
+  animation: pulse-live 2s ease-in-out infinite;
+}
+[data-theme="light"] .project-dot { background: #0e9a72; }
+@keyframes pulse-live {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%     { opacity:0.4; transform:scale(0.75); }
+}
+.project-name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+.project-desc {
+  font-size: 13px;
+  color: var(--secondary);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.project-stack { display: flex; gap: 5px; flex-wrap: wrap; }
+.stack-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(124,106,247,0.09);
+  color: #9f8fff;
+  font-family: var(--font-mono, monospace);
+  border: 1px solid rgba(124,106,247,0.18);
+}
+[data-theme="light"] .stack-tag { background: rgba(90,79,208,0.07); color: #5a4fd0; border-color: rgba(90,79,208,0.15); }
+
+/* ── Commits ── */
+.commits-list { display: flex; flex-direction: column; gap: 3px; }
+.commit-row {
+  display: grid;
+  grid-template-columns: 58px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--entry);
+  border: 1px solid var(--border, rgba(255,255,255,0.06));
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.commit-row:hover {
+  border-color: rgba(93,232,193,0.38);
+  background: rgba(93,232,193,0.03);
+}
+[data-theme="light"] .commit-row:hover { border-color: rgba(14,154,114,0.30); background: rgba(14,154,114,0.04); }
+.commit-hash {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  color: #5de8c1;
+  letter-spacing: 0.04em;
+}
+[data-theme="light"] .commit-hash { color: #0e9a72; }
+.commit-msg {
+  font-size: 14px;
+  color: var(--primary);
+  line-height: 1.45;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.commit-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.commit-tag {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: rgba(93,232,193,0.08);
+  color: #5de8c1;
+  border: 1px solid rgba(93,232,193,0.16);
+  font-family: var(--font-mono, monospace);
+  white-space: nowrap;
+}
+[data-theme="light"] .commit-tag { background: rgba(14,154,114,0.07); color: #0e9a72; border-color: rgba(14,154,114,0.15); }
+.commit-date {
+  font-size: 12px;
+  color: var(--secondary);
+  font-family: var(--font-mono, monospace);
+  white-space: nowrap;
+}
+.commits-total {
+  margin-top: 12px;
+  font-size: 13px;
+  font-family: var(--font-mono, monospace);
+  color: var(--secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.commits-total strong { color: #5de8c1; font-weight: 600; }
+[data-theme="light"] .commits-total strong { color: #0e9a72; }
+
+/* ── Filters ── */
+.filters {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
+  background: transparent;
+  color: var(--secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  line-height: 1;
+}
+.filter-btn:hover { color: var(--primary); border-color: rgba(124,106,247,0.45); }
+.filter-btn.active { background: rgba(124,106,247,0.12); color: #9f8fff; border-color: rgba(124,106,247,0.5); }
+[data-theme="light"] .filter-btn.active { background: rgba(90,79,208,0.08); color: #5a4fd0; border-color: rgba(90,79,208,0.4); }
+
+/* ── Post Cards ── */
+.post-list { display: flex; flex-direction: column; gap: 8px; }
+.post-card {
+  background: var(--entry);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: 10px;
+  padding: 20px 22px;
+  text-decoration: none;
+  display: block;
+  transition: border-color 0.15s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+/* left bar */
+.post-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  border-radius: 0;
+}
+.post-card[data-cat="devlog"]::before     { background: #5de8c1; }
+.post-card[data-cat="project"]::before    { background: #7c6af7; }
+.post-card[data-cat="architecture"]::before { background: #f4a942; }
+.post-card[data-cat="default"]::before    { background: rgba(200,200,200,0.4); }
+
+.post-card:hover { transform: translateY(-1px); }
+.post-card:hover::before { opacity: 1; }
+
+/* border glow per category */
+.post-card[data-cat="devlog"]:hover     { border-color: rgba(93,232,193,0.42); }
+.post-card[data-cat="project"]:hover    { border-color: rgba(124,106,247,0.45); }
+.post-card[data-cat="architecture"]:hover { border-color: rgba(244,169,66,0.45); }
+.post-card[data-cat="default"]:hover    { border-color: rgba(200,200,200,0.22); }
+[data-theme="light"] .post-card[data-cat="devlog"]:hover     { border-color: rgba(14,154,114,0.35); }
+[data-theme="light"] .post-card[data-cat="project"]:hover    { border-color: rgba(90,79,208,0.40); }
+[data-theme="light"] .post-card[data-cat="architecture"]:hover { border-color: rgba(180,120,0,0.40); }
+
+/* card inner */
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.card-badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  line-height: 1.4;
+}
+.badge-project      { background: rgba(124,106,247,0.12); color: #9f8fff; }
+.badge-devlog       { background: rgba(93,232,193,0.10);  color: #5de8c1; }
+.badge-architecture { background: rgba(244,169,66,0.12);  color: #f4a942; }
+.badge-default      { background: rgba(255,255,255,0.07); color: var(--secondary); }
+[data-theme="light"] .badge-project      { background: rgba(90,79,208,0.08);   color: #5a4fd0; }
+[data-theme="light"] .badge-devlog       { background: rgba(14,154,114,0.08);  color: #0e9a72; }
+[data-theme="light"] .badge-architecture { background: rgba(180,120,0,0.08);   color: #a07800; }
+[data-theme="light"] .badge-default      { background: rgba(0,0,0,0.05);       color: #888; }
+
+.card-date {
+  font-size: 12px;
+  color: var(--secondary);
+  font-family: var(--font-mono, monospace);
+  margin-left: auto;      /* 날짜를 오른쪽 끝으로 */
+}
+.card-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--primary);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+.card-desc {
+  font-size: 14px;
+  color: var(--secondary);
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.card-tag {
+  font-size: 11px;
+  padding: 2px 9px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.05);
+  color: var(--secondary);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+[data-theme="light"] .card-tag { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); color: #666; }
+.no-result { padding: 32px 0; text-align: center; font-size: 14px; color: var(--secondary); display: none; }
+
+/* ── Search bar (bottom) ── */
+.search-section-wrap {
+  background: var(--entry);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+}
+.search-tabs { display: flex; gap: 4px; margin-bottom: 14px; }
+.search-tab {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 13px;
+  border-radius: 5px;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  background: transparent;
+  color: var(--secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.search-tab.active { background: rgba(124,106,247,0.12); color: #9f8fff; border-color: rgba(124,106,247,0.4); }
+.search-tab:hover:not(.active) { color: var(--primary); }
+[data-theme="light"] .search-tab.active { background: rgba(90,79,208,0.08); color: #5a4fd0; border-color: rgba(90,79,208,0.35); }
+.search-bar-wrap { position: relative; }
+.search-bar-wrap svg {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  width: 15px; height: 15px; color: var(--secondary); pointer-events: none;
+}
+#home-search {
+  width: 100%; box-sizing: border-box;
+  background: var(--bg-base, #0a0a0b);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: 8px;
+  color: var(--primary);
+  font-size: 14px;
+  font-family: inherit;
+  padding: 10px 14px 10px 36px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+[data-theme="light"] #home-search { background: #f4f4f8; }
+#home-search::placeholder { color: var(--secondary); opacity: 0.6; }
+#home-search:focus { border-color: rgba(124,106,247,0.5); box-shadow: 0 0 0 3px rgba(124,106,247,0.09); }
+#search-results-count { font-size: 12px; color: var(--secondary); font-family: var(--font-mono, monospace); margin-top: 8px; min-height: 18px; }
+
+/* ── Tags cloud ── */
+.tags-cloud { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.tag-chip {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 20px;
+  background: rgba(124,106,247,0.08);
+  color: #9f8fff;
+  border: 1px solid rgba(124,106,247,0.18);
+  text-decoration: none;
+  transition: all 0.15s;
+  font-family: var(--font-mono, monospace);
+}
+.tag-chip:hover { background: rgba(124,106,247,0.18); border-color: rgba(124,106,247,0.45); }
+[data-theme="light"] .tag-chip { background: rgba(90,79,208,0.06); color: #5a4fd0; border-color: rgba(90,79,208,0.18); }
+.tag-count { font-size: 11px; opacity: 0.55; margin-left: 4px; }
+
+/* ── Footer contact ── */
+.home-footer-contact {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border, rgba(255,255,255,0.08));
+  margin-top: 8px;
+}
+.hfc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--secondary);
+  text-decoration: none;
+  font-family: var(--font-mono, monospace);
+  transition: color 0.15s;
+}
+.hfc-link:hover { color: var(--primary); }
+.hfc-link svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+@media (max-width: 600px) {
+  .hero-title     { font-size: 28px; }
+  .hero-stats     { flex-wrap: wrap; }
+  .hero-stat      { min-width: 80px; }
+  .projects-grid  { grid-template-columns: 1fr; }
+  .card-title     { font-size: 15px; }
+}
+</style>
+
+<div class="home-wrap">
+
+  {{/* ── Hero ── */}}
+<section class="hero">
+  <div class="hero-label">Engineering Blog</div>
+
+  <h1 class="hero-title" id="hero-title-anim">
+    기획부터 배포까지,<br>
+    <span class="accent">개발의 모든 흔적</span>
+  </h1>
+
+  <p class="hero-sub">
+    프로젝트 설계 과정, 커밋 단위 개발 로그, 시스템 아키텍처를 기록합니다.
+  </p>
+
+  <div class="hero-stats">
+
+    <!-- Posts -->
+    <div class="hero-stat" style="--accent:#7c6af7;">
+      <div class="stat-eyebrow">
+        <span class="stat-dot"></span>
+        Posts
+      </div>
+
+      <div class="stat-num" data-count="{{ len $allPosts }}">0</div>
+      <div class="stat-sub">작성된 포스트 수</div>
+
+      <div class="stat-bar-track">
+        <div class="stat-bar-fill"
+          style="width:{{ mul (div (len $allPosts | float) 25.0) 100 }}%;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Projects -->
+    <div class="hero-stat" style="--accent:#5de8c1;">
+      <div class="stat-eyebrow">
+        <span class="stat-dot"></span>
+        Projects
+      </div>
+
+      <div class="stat-num" data-count="{{ len $allProjects }}">0</div>
+      <div class="stat-sub">프로젝트 수</div>
+
+      <div class="stat-bar-track">
+        <div class="stat-bar-fill"
+          style="width:{{ mul (div (len $allProjects | float) 12.0) 100 }}%;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Commits -->
+    <div class="hero-stat" style="--accent:#f4a942;">
+      <div class="stat-eyebrow">
+        <span class="stat-dot"></span>
+        Commits
+      </div>
+
+      <div class="stat-num"
+           data-count="{{ if gt $totalCommits 0 }}{{ $totalCommits }}{{ else }}0{{ end }}">
+        0
+      </div>
+
+      <div class="stat-sub">누적 커밋 수</div>
+
+      <div class="stat-bar-track">
+        <div class="stat-bar-fill"
+          style="width:{{ if gt $totalCommits 0 }}{{ mul (div ($totalCommits | float) 300.0) 100 }}%{{ else }}0%{{ end }};">
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /hero-stats -->
+</section>
+
+<!-- 숫자 카운팅 -->
+<script>
+document.querySelectorAll('.stat-num').forEach(el => {
+  const target = +el.dataset.count;
+  let current = 0;
+  const step = target / 20;
+
+  const update = () => {
+    current += step;
+    if (current >= target) {
+      el.textContent = target.toLocaleString();
+    } else {
+      el.textContent = Math.floor(current).toLocaleString();
+      requestAnimationFrame(update);
+    }
+  };
+
+  update();
+});
+</script>
+
+<!-- 타이틀 글자 분리 애니메이션 -->
+<script>
+(function () {
+  const el = document.getElementById('hero-title-anim');
+  if (!el) return;
+
+  const BASE_DELAY = 0.01;   // 글자당 딜레이 (조금 더 부드럽게 조정 가능)
+  let charIndex = 0;
+
+  function wrapChars(node, isAccent) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const frag = document.createDocumentFragment();
+      for (const ch of node.textContent) {
+        const s = document.createElement('span');
+        s.className = 'char' + (isAccent ? ' accent' : '');
+        
+        if (ch === ' ') {
+          s.textContent = '\u00A0';           // ← 핵심: Non-breaking space 사용
+          s.style.display = 'inline-block';
+          s.style.width = '0.35em';           // 한글 기준 적당한 공백 너비 (필요시 조정)
+        } else {
+          s.textContent = ch;
+          s.style.animationDelay = (charIndex * BASE_DELAY + 0.04) + 's';
+        }
+        
+        frag.appendChild(s);
+        charIndex++;
+      }
+      return frag;
+    }
+    return null;
+  }
+
+  // 원본 childNodes 스냅샷
+  const children = Array.from(el.childNodes);
+  el.innerHTML = '';
+
+  children.forEach(node => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const frag = wrapChars(node, false);
+      if (frag) el.appendChild(frag);
+    } 
+    else if (node.nodeName === 'BR') {
+      el.appendChild(document.createElement('br'));
+    } 
+    else if (node.nodeName === 'SPAN' && node.classList.contains('accent')) {
+      const wrapper = document.createElement('span');
+      wrapper.style.display = 'inline';
+      
+      for (const ch of node.textContent) {
+        const s = document.createElement('span');
+        s.className = 'char accent';
+        
+        if (ch === ' ') {
+          s.textContent = '\u00A0';
+          s.style.display = 'inline-block';
+          s.style.width = '0.35em';
+        } else {
+          s.textContent = ch;
+          s.style.animationDelay = (charIndex * BASE_DELAY + 0.04) + 's';
+        }
+        
+        wrapper.appendChild(s);
+        charIndex++;
+      }
+      el.appendChild(wrapper);
+    }
+  });
+})();
+</script>
+
+    <div class="contact-strip">
+      <a class="contact-link" href="https://github.com/SongChaeYoung98" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        SongChaeYoung98
+      </a>
+      <a class="contact-link" href="mailto:0.0yeriel@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+        0.0yeriel@gmail.com
+      </a>
+    </div>
+  </section>
+
+  {{/* ══ 상단 광고 슬롯 ══ */}}
+  <div class="ad-slot" id="ad-top">
+    <!-- Google AdSense: data-ad-slot 값 발급 후 아래 코드로 교체하세요
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    -->
+    Google ADS API
+  </div>
+
+  {{/* ══ Projects ══ */}}
+  {{- if $allProjects }}
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-title">Projects</span>
+      <a class="section-link" href="/projects/">All Projects</a>
+    </div>
+    <div class="projects-grid">
+      {{- range first 4 $allProjects.ByDate.Reverse }}
+      {{- $isLive := eq .Params.status "live" }}
+      <a class="project-card" href="{{ .RelPermalink }}">
+        {{- if $isLive }}
+        <div class="project-status"><span class="project-dot"></span>LIVE</div>
+        {{- else }}
+        <div class="project-status" style="color:var(--secondary); opacity:0.6;">
+          <span style="width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;"></span>
+          {{ .Params.status | default "WIP" | upper }}
+        </div>
+        {{- end }}
+        <div class="project-name">{{ .Title }}</div>
+        {{- with .Description }}<div class="project-desc">{{ . }}</div>{{ end }}
+        {{- with .Params.stack }}
+        <div class="project-stack">
+          {{- range first 4 . }}<span class="stack-tag">{{ . }}</span>{{ end }}
+        </div>
+        {{- end }}
+      </a>
+      {{- end }}
+    </div>
+  </div>
+  {{- end }}
+
+  {{/* ══ Recent Commits ══
+       front matter 예시:
+       commits: 12          ← 이 포스트의 총 커밋 수
+       commit_log:
+         - hash: "a1b2c3d"
+           message: "feat: 유저 인증 구현"
+           project: "프로젝트명"
+  ══ */}}
+  {{- $postsWithCommitLog := where $allPosts "Params.commit_log" "!=" nil }}
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-title">Recent Commits</span>
+      <a class="section-link" href="/posts/">All Posts</a>
+    </div>
+    {{- if $postsWithCommitLog }}
+    <div class="commits-list">
+      {{- $count := 0 }}
+      {{- range $postsWithCommitLog.ByDate.Reverse }}
+        {{- $post := . }}
+        {{- range first 3 .Params.commit_log }}
+          {{- if lt $count 8 }}
+          <a class="commit-row" href="{{ $post.RelPermalink }}">
+            <span class="commit-hash">{{ .hash | default "——" }}</span>
+            <span class="commit-msg">{{ .message }}</span>
+            <span class="commit-right">
+              <span class="commit-tag">{{ .project | default ($post.Params.project | default $post.Title) }}</span>
+              <span class="commit-date">{{ $post.Date.Format "01/02 15:04" }}</span>
+            </span>
+          </a>
+          {{- $count = add $count 1 }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    </div>
+    {{- else }}
+    <div style="padding:20px 0; font-size:14px; color:var(--secondary); font-family:var(--font-mono,monospace);">
+      포스트 front matter에 <code style="font-size:12px;background:rgba(255,255,255,0.06);padding:1px 6px;border-radius:3px;">commit_log</code> 배열을 추가하면 여기에 표시됨, 향후 수정하라.
+    </div>
+    {{- end }}
+    {{- if gt $totalCommits 0 }}
+    <div class="commits-total">누적 커밋 <strong>{{ $totalCommits }}</strong> 개</div>
+    {{- end }}
+  </div>
+
+  {{/* ══ Posts ══ */}}
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-title">Posts</span>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterPosts(this,'all')">All</button>
+      <button class="filter-btn" onclick="filterPosts(this,'project')">🗂 Project</button>
+      <button class="filter-btn" onclick="filterPosts(this,'devlog')">📝 Dev Log</button>
+      <button class="filter-btn" onclick="filterPosts(this,'architecture')">⚙️ Architecture</button>
+    </div>
+
+    <div class="post-list" id="post-list">
+      {{- range $allPosts.ByDate.Reverse }}
+        {{- $cats := .Params.categories }}
+        {{- $cat  := "default" }}
+        {{- if $cats }}{{- $cat = index $cats 0 }}{{- end }}
+        {{- $label := $cat }}
+        {{- if eq $cat "project" }}{{- $label = "PROJECT" }}
+        {{- else if eq $cat "devlog" }}{{- $label = "DEV LOG" }}
+        {{- else if eq $cat "architecture" }}{{- $label = "ARCHITECTURE" }}
+        {{- else }}{{- $label = upper $cat }}{{- end }}
+        {{- $tagsStr := "" }}
+        {{- with .Params.tags }}{{- $tagsStr = delimit . " " | lower }}{{- end }}
+
+        <a class="post-card"
+           href="{{ .RelPermalink }}"
+           data-cat="{{ $cat }}"
+           data-title="{{ .Title | lower }}"
+           data-tags="{{ $tagsStr }}">
+          <div class="card-meta">
+            <span class="card-badge badge-{{ $cat }}">{{ $label }}</span>
+            <span class="card-date">{{ .Date.Format "2006. 01. 02  15:04" }}</span>
+          </div>
+          <div class="card-title">{{ .Title }}</div>
+          {{- with .Description }}
+            <div class="card-desc">{{ . }}</div>
+          {{- else }}
+            {{- with .Summary }}
+              <div class="card-desc">{{ . | plainify | truncate 130 }}</div>
+            {{- end }}
+          {{- end }}
+          {{- with .Params.tags }}
+            <div class="card-tags">
+              {{- range first 5 . }}<span class="card-tag">{{ . }}</span>{{- end }}
+            </div>
+          {{- end }}
+        </a>
+      {{- end }}
+    </div>
+    <div class="no-result" id="no-result-posts">검색 결과가 없습니다.</div>
+  </div>
+
+  {{/* ══ 중간 광고 슬롯 ══ */}}
+  <div class="ad-slot" id="ad-mid">
+    <!-- Google AdSense 슬롯 -->
+    Google ADS API
+  </div>
+
+  {{/* ══ Search ══ */}}
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-title">Search</span>
+    </div>
+    <div class="search-section-wrap">
+      <div class="search-tabs">
+        <button class="search-tab active" onclick="switchScope(this,'posts')">Posts</button>
+        <button class="search-tab"        onclick="switchScope(this,'projects')">Projects</button>
+        <button class="search-tab"        onclick="switchScope(this,'tags')">Tags</button>
+      </div>
+      <div class="search-bar-wrap">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="8.5" cy="8.5" r="5.5"/><path d="M13.5 13.5L18 18"/>
+        </svg>
+        <input id="home-search" type="text" placeholder="제목, 태그로 검색…" autocomplete="off" oninput="runSearch()">
+      </div>
+      <div id="search-results-count"></div>
+
+      {{/* Search: Projects list */}}
+      <div id="scope-projects" style="display:none;">
+        <div class="post-list" id="project-list" style="margin-top:14px;">
+          {{- range $allProjects.ByDate.Reverse }}
+          {{- $tagsStr := "" }}
+          {{- with .Params.tags }}{{- $tagsStr = delimit . " " | lower }}{{- end }}
+          <a class="post-card"
+             href="{{ .RelPermalink }}"
+             data-cat="project"
+             data-title="{{ .Title | lower }}"
+             data-tags="{{ $tagsStr }}">
+            <div class="card-meta">
+              <span class="card-badge badge-project">PROJECT</span>
+              <span class="card-date">{{ .Date.Format "2006. 01. 02  15:04" }}</span>
+            </div>
+            <div class="card-title">{{ .Title }}</div>
+            {{- with .Description }}<div class="card-desc">{{ . }}</div>{{ end }}
+            {{- with .Params.stack }}
+            <div class="card-tags">{{- range first 5 . }}<span class="card-tag">{{ . }}</span>{{- end }}</div>
+            {{- end }}
+          </a>
+          {{- end }}
+        </div>
+        <div class="no-result" id="no-result-projects">검색 결과가 없습니다.</div>
+      </div>
+
+      {{/* Search: Tags */}}
+      <div id="scope-tags" style="display:none;">
+        <div class="tags-cloud" id="tags-cloud">
+          {{- range $name, $pages := site.Taxonomies.tags }}
+          <a class="tag-chip" href="/tags/{{ $name | urlize }}/" data-name="{{ $name | lower }}">
+            #{{ $name }}<span class="tag-count">{{ len $pages }}</span>
+          </a>
+          {{- end }}
+        </div>
+        <div class="no-result" id="no-result-tags">검색 결과가 없습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  {{/* ══ Footer contact ══ */}}
+  <div class="home-footer-contact">
+    <a class="hfc-link" href="https://github.com/SongChaeYoung98" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      github.com/SongChaeYoung98
+    </a>
+    <a class="hfc-link" href="mailto:0.0yeriel@gmail.com">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+      0.0yeriel@gmail.com
+    </a>
+  </div>
+
+</div><!-- /home-wrap -->
+
+<script>
+/* ── Posts filter ── */
+var currentFilter = 'all';
+function filterPosts(btn, type) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = type;
+  applyPostFilter('');
+}
+function applyPostFilter(q) {
+  var cards = document.querySelectorAll('#post-list .post-card');
+  var vis = 0;
+  cards.forEach(function(c) {
+    var catOk = currentFilter === 'all' || c.dataset.cat === currentFilter;
+    var qOk   = !q || c.dataset.title.includes(q) || (c.dataset.tags || '').includes(q);
+    var show  = catOk && qOk;
+    c.style.display = show ? '' : 'none';
+    if (show) vis++;
+  });
+  var nr = document.getElementById('no-result-posts');
+  if (nr) nr.style.display = vis === 0 ? 'block' : 'none';
+  return vis;
+}
+
+/* ── Search scope ── */
+var currentScope = 'posts';
+function switchScope(btn, scope) {
+  document.querySelectorAll('.search-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['projects','tags'].forEach(function(s) {
+    var el = document.getElementById('scope-' + s);
+    if (el) el.style.display = s === scope ? '' : 'none';
+  });
+  currentScope = scope;
+  runSearch();
+}
+
+function runSearch() {
+  var q = document.getElementById('home-search').value.trim().toLowerCase();
+  var countEl = document.getElementById('search-results-count');
+
+  if (currentScope === 'posts') {
+    var vis = applyPostFilter(q);
+    countEl.textContent = q ? vis + '개의 포스트' : '';
+
+  } else if (currentScope === 'projects') {
+    var pcards = document.querySelectorAll('#project-list .post-card');
+    var pvis = 0;
+    pcards.forEach(function(c) {
+      var show = !q || c.dataset.title.includes(q) || (c.dataset.tags || '').includes(q);
+      c.style.display = show ? '' : 'none';
+      if (show) pvis++;
+    });
+    var pnr = document.getElementById('no-result-projects');
+    if (pnr) pnr.style.display = pvis === 0 ? 'block' : 'none';
+    countEl.textContent = q ? pvis + '개의 프로젝트' : '';
+
+  } else if (currentScope === 'tags') {
+    var chips = document.querySelectorAll('#tags-cloud .tag-chip');
+    var tvis = 0;
+    chips.forEach(function(c) {
+      var show = !q || c.dataset.name.includes(q);
+      c.style.display = show ? '' : 'none';
+      if (show) tvis++;
+    });
+    var tnr = document.getElementById('no-result-tags');
+    if (tnr) tnr.style.display = tvis === 0 ? 'block' : 'none';
+    countEl.textContent = q ? tvis + '개의 태그' : '';
+  }
+}
+</script>
+
+{{- end }}
