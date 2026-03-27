@@ -57,7 +57,7 @@
   border: 1px solid var(--border, rgba(255,255,255,0.08));
   border-radius: 10px;
   overflow: hidden;
-  width: 100%;        /* fit-content → 100% */
+  width: 63%;        /* fit-content → 100% */
   max-width: 780px;   /* 추가 */
 }
 
@@ -601,7 +601,7 @@
 
 @media (max-width: 600px) {
   .hero-title { font-size: 28px; }
-  .hero-stats { height: auto; min-height: 148px; }
+  .hero-stats { height: auto; min-height: 148px; width: 100% !important; }
   .hero-stat { padding: 16px 14px; }
   .stat-num { font-size: 28px; }
   .stat-sub { height: auto; font-size: 12.5px; }
