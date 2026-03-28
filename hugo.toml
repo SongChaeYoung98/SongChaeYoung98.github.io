@@ -121,3 +121,8 @@ buildExpired = false
     guessSyntax = true
     lineNos = false
     style = "base16-snazzy"
+
+enableGitInfo = true
+
+[frontmatter]
+  lastmod = ["lastmod", ":git", "date"]

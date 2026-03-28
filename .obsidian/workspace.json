@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "content/posts/First Post.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "First Post"
             }
           }
         ]
@@ -53,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "commit",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -74,8 +74,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -188,10 +187,21 @@
   },
   "active": "8357f97e6a1192ed",
   "lastOpenFiles": [
+    "layouts/partials/extend_head.html",
+    "layouts/posts/list.html",
+    "public/projects/index.xml",
+    "public/projects/index.html",
+    "content/projects/_index.md",
+    "public/projects/새 텍스트 문서.txt",
+    "public/projects",
+    "content/projects/새 텍스트 문서.txt",
+    "content/projects",
+    "content/새 폴더",
+    "layouts/projects/list.html",
+    "layouts/projects/list (1).html",
+    "README.md",
     "backup/3/화면 캡처 2026-03-27 123557.png",
     "backup/3/화면 캡처 2026-03-27 123541.png",
-    "backup/3/index.html",
-    "backup/3/custom.css",
     "templates/new-til-post.md",
     "templates/devlog-post.md",
     "templates/new-troubleshooting-post.md",
@@ -199,15 +209,6 @@
     "templates/new-post.md",
     "templates/new-new-post.md",
     "templates/new-mindmap-post.md",
-    "README.md",
-    "public/assets/css/stylesheet.4f812aaaaa12f5d000bec80ee8411211c440ecdb40a0ed2fd5aeacb67a0654a2.css",
-    "public/assets/css/stylesheet.9c0e0d4ac173719608194e0b39a47e3335ffc11d84f13bb6d39dcb1d092c4fff.css",
-    "public/assets/css/stylesheet.8e6a6397cd8333b387d66d5eb381c7e1b3ae1dcf413e4e92416cf5ca146d8207.css",
-    "public/assets/css/stylesheet.3a139d8380bb7b0fda0e838c33bdb2a82ecb256262d3e6f76c2a9867bf8c868f.css",
-    "public/assets/css/stylesheet.7c7f303e092031b814388f8f9da5da24379fbca0e5c23bfc8c5aadb994dcfba3.css",
-    "public/assets/css/stylesheet.0e04dce36376978950419e19ca2038989bd2cdc9ee63f3a5d7da853f306bba90.css",
-    "public/assets/css/stylesheet.dc4a9723b1b48d335d57d6c9317fb14cf5947dcd11c913f5038d88c686735849.css",
-    "public/assets/css/stylesheet.f174376edbc6975802c553d23ce4a094572282a4aab3669f1d19fbff0e65e6a6.css",
     "templates/new-reading-post.md",
     "templates/new-retrospective-post.md",
     "backup/1/화면 캡처 2026-03-26 204333.png",
@@ -227,7 +228,6 @@
     "content/templates/new-post.md",
     "content/templates/devlog-post.md",
     "content/templates/architecture-post.md",
-    "templates/post.md",
-    "content/posts/test.md"
+    "templates/post.md"
   ]
 }

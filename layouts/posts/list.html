@@ -1,0 +1,117 @@
+{{- define "main" -}}
+{{/*
+  layouts/posts/list.html
+  /posts/ 페이지 — index.html 과 동일한 디자인 시스템 사용
+*/}}
+
+{{- $allPosts := where .Site.RegularPages "Type" "posts" -}}
+
+{{- partial "custom-styles.html" . -}}
+<style>
+.list-page-wrap { padding-top: 5.5rem; min-height: 100vh; }
+</style>
+
+{{- partial "nav.html" . -}}
+
+<div class="list-page-wrap">
+  <div class="container">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="section-label"># all posts</div>
+      <h1>Posts</h1>
+      <p>총 {{ len $allPosts }}편의 개발 기록이 있습니다.</p>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div class="filter-tabs" id="postsFilterTabs">
+      <button class="tab active" data-filter="all">All</button>
+      <button class="tab" data-filter="project">🗂 Project</button>
+      <button class="tab" data-filter="devlog">📝 Dev Log</button>
+      <button class="tab" data-filter="architecture">⚙️ Architecture</button>
+    </div>
+
+    <!-- POSTS LIST -->
+    <div class="posts-list" id="postsListGrid">
+
+      {{- range $allPosts -}}
+        {{- $cat := default "default" .Params.categories -}}
+        {{- if reflect.IsSlice $cat -}}{{- $cat = index $cat 0 -}}{{- end -}}
+        {{- $catLower := lower $cat -}}
+
+        {{- $badgeClass := "badge-default" -}}
+        {{- $badgeLabel := upper $cat -}}
+        {{- if eq $catLower "project"           -}}{{- $badgeClass = "badge-project"      -}}{{- $badgeLabel = "🗂 Project"      -}}
+        {{- else if eq $catLower "devlog"       -}}{{- $badgeClass = "badge-devlog"       -}}{{- $badgeLabel = "📝 Dev Log"      -}}
+        {{- else if eq $catLower "architecture" -}}{{- $badgeClass = "badge-architecture" -}}{{- $badgeLabel = "⚙️ Architecture" -}}
+        {{- end -}}
+
+      <a href="{{ .RelPermalink }}" class="post-list-item" data-category="{{ $catLower }}">
+        <div class="post-list-meta">{{ .Date.Format "2006.01.02" }}</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;flex:1;min-width:0">
+          <div class="card-badge {{ $badgeClass }}" style="margin-bottom:0">{{ $badgeLabel }}</div>
+          <div class="post-list-title">{{ .Title }}</div>
+        </div>
+        <div class="post-list-desc">{{ .Summary | truncate 80 }}</div>
+        <div class="card-tags" style="flex-shrink:0">
+          {{- range first 2 .Params.tags -}}
+          <span class="card-tag">{{ . }}</span>
+          {{- end -}}
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+      {{- end -}}
+
+      {{- if eq (len $allPosts) 0 -}}
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="big">✍️</div>
+        아직 작성된 글이 없습니다.
+      </div>
+      {{- end -}}
+
+      <div class="empty-state" id="postsEmptyState" style="display:none;grid-column:1/-1">
+        <div class="big">📭</div>
+        해당 카테고리의 글이 없습니다.
+      </div>
+
+    </div><!-- /posts-list -->
+  </div><!-- /container -->
+</div><!-- /list-page-wrap -->
+
+<script>
+// extend_header.html 의 검색 기능과 연동
+window.__searchData = [
+  {{- range .Site.RegularPages -}}
+  { title: {{ .Title | jsonify }}, desc: {{ .Summary | truncate 100 | jsonify }},
+    url: {{ .RelPermalink | jsonify }}, type: {{ .Type | jsonify }},
+    date: {{ .Date.Format "2006.01.02 15:04" | jsonify }} },
+  {{- end -}}
+];
+</script>
+
+<script>
+(function(){
+  // filter tabs
+  var tabs  = document.getElementById('postsFilterTabs');
+  var grid  = document.getElementById('postsListGrid');
+  var empty = document.getElementById('postsEmptyState');
+  if (tabs) {
+    tabs.querySelectorAll('.tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        tabs.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+        tab.classList.add('active');
+        var filter = tab.dataset.filter;
+        var visible = 0;
+        grid.querySelectorAll('[data-category]').forEach(function(card) {
+          var show = filter === 'all' || card.dataset.category === filter;
+          card.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        if (empty) empty.style.display = (visible === 0 && filter !== 'all') ? '' : 'none';
+      });
+    });
+  }
+})();
+</script>
+
+{{- end -}}

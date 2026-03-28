@@ -1,35 +1,61 @@
-{{- define "main" -}}
-{{/*
-  layouts/index.html
-  Hugo + PaperMod 홈 페이지 완전 오버라이드.
-  PaperMod의 baseof.html을 그대로 상속하므로 <head>, <nav> 등은 PaperMod 것을 씁니다.
-  아래는 <main> 블록만 교체합니다.
-
-  필요한 front matter (content/_index.md):
-  ---
-  title: "SongChaeYoung.dev"
-  ---
-*/}}
-
-{{/* ── 데이터 준비 ── */}}
-{{- $allPosts    := where .Site.RegularPages "Type" "posts" -}}
-{{- $allProjects := where .Site.RegularPages "Type" "projects" -}}
-{{- $allTags     := .Site.Taxonomies.tags -}}
-{{- $recentPosts := first 4 $allPosts -}}
-
-{{/* git info는 hugo.yaml 에서 enableGitInfo: true 필요 */}}
-{{- $lastCommitMsg  := "" -}}
-{{- $lastCommitHash := "" -}}
-{{- if .GitInfo -}}
-  {{- $lastCommitMsg  = .GitInfo.Subject -}}
-  {{- $lastCommitHash = slice .GitInfo.AbbreviatedHash -}}
-{{- end -}}
-
-<!-- ══════════════════════════════════════
-     INLINE STYLES
-════════════════════════════════════════ -->
 <style>
-/* ── 테마 변수 / 베이스 리셋: extend_head.html 에서 전역 로드 ── */
+/* ════════════════════════════════════════
+   DARK THEME (default)
+════════════════════════════════════════ */
+/* PaperMod sets data-theme on <html>; our JS does the same — both selectors needed */
+:root,
+html[data-theme="dark"],
+[data-theme="dark"] {
+  --bg:        #0d0d10;
+  --bg-card:   #13131a;
+  --bg-card2:  #1a1a24;
+  --border:    rgba(124,106,247,0.18);
+  --accent:    #7c6af7;
+  --accent2:   #5de8c1;
+  --accent3:   #f4a942;
+  --text:      #e8e8f0;
+  --muted:     #6e6e8a;
+  --glow:      rgba(124,106,247,0.35);
+  --nav-bg:    rgba(13,13,16,0.80);
+  --nav-border: rgba(124,106,247,0.18);
+  --card-hover-shadow: 0 12px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(124,106,247,0.18);
+  --scrollbar-thumb: rgba(124,106,247,0.28);
+  --scrollbar-thumb-h: rgba(124,106,247,0.48);
+  --selection-bg: rgba(124,106,247,0.28);
+}
+
+/* ════════════════════════════════════════
+   LIGHT THEME
+════════════════════════════════════════ */
+html[data-theme="light"],
+[data-theme="light"] {
+  --bg:        #f5f5f8;
+  --bg-card:   #ffffff;
+  --bg-card2:  #f0f0f5;
+  --border:    rgba(90,79,208,0.14);
+  --accent:    #5a4fd0;
+  --accent2:   #1aa88a;
+  --accent3:   #d4870e;
+  --text:      #18181f;
+  --muted:     #6b6b80;
+  --glow:      rgba(90,79,208,0.18);
+  --nav-bg:    rgba(245,245,248,0.88);
+  --nav-border: rgba(90,79,208,0.1);
+  --card-hover-shadow: 0 8px 32px rgba(90,79,208,0.10), 0 0 0 1px rgba(90,79,208,0.16);
+  --scrollbar-thumb: rgba(90,79,208,0.20);
+  --scrollbar-thumb-h: rgba(90,79,208,0.42);
+  --selection-bg: rgba(90,79,208,0.18);
+}
+
+/* PaperMod 기본값 리셋 */
+body { background: var(--bg) !important; color: var(--text) !important; font-family: 'Plus Jakarta Sans', sans-serif !important; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
+.main { padding: 0 !important; max-width: none !important; }
+header.header { display: none; } /* PaperMod 헤더 숨김 — 아래 커스텀 nav 사용 */
+/* PaperMod 내장 theme toggle 중복 방지 */
+#theme-toggle-btn { display: none !important; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
 /* Noise texture */
 body::before {
@@ -49,7 +75,114 @@ body::after {
   pointer-events: none; z-index: 0;
 }
 
-/* ── ::selection, scrollbar, nav CSS: extend_head.html 에서 전역 로드 ── */
+::selection { background: var(--selection-bg); color: var(--text); }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-h); }
+
+/* ── NAV — PaperMod 완전 제압, specificity 최대화 ── */
+
+/* PaperMod 기본 header/nav 완전 숨김 */
+header.header,
+.header,
+#header { display: none !important; }
+
+/* 커스텀 nav */
+nav.custom-nav {
+  position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important;
+  z-index: 9999 !important;
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  padding: 1rem 2.5rem !important;
+  background: var(--nav-bg) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid var(--nav-border) !important;
+  transition: background 0.3s, border-color 0.3s;
+  box-shadow: none !important;
+  height: auto !important; width: 100% !important;
+}
+
+/* logo */
+nav.custom-nav a.nav-logo {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.85rem !important;
+  color: var(--accent2) !important;
+  letter-spacing: 0.05em !important;
+  text-decoration: none !important;
+  transition: opacity 0.2s;
+  font-weight: 400 !important;
+  background: none !important;
+}
+nav.custom-nav a.nav-logo:hover { opacity: 0.75 !important; }
+nav.custom-nav a.nav-logo span { color: var(--accent) !important; }
+
+/* nav links */
+nav.custom-nav ul.nav-links {
+  display: flex !important; gap: 2rem !important;
+  list-style: none !important; margin: 0 !important; padding: 0 !important;
+}
+nav.custom-nav ul.nav-links li { margin: 0 !important; padding: 0 !important; }
+nav.custom-nav ul.nav-links a {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.78rem !important;
+  color: var(--muted) !important;
+  text-decoration: none !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  transition: color 0.2s;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+nav.custom-nav ul.nav-links a:hover { color: var(--text) !important; }
+nav.custom-nav ul.nav-links a[aria-current="page"],
+nav.custom-nav ul.nav-links a.active { color: var(--accent) !important; }
+
+/* nav right */
+nav.custom-nav .nav-right {
+  display: flex !important; align-items: center !important; gap: 0.75rem !important;
+}
+
+/* search button */
+nav.custom-nav button.btn-search {
+  background: none !important;
+  border: 1px solid var(--border) !important;
+  color: var(--muted) !important;
+  padding: .4rem .9rem !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.75rem !important;
+  transition: all .2s;
+  line-height: 1.4 !important;
+  box-shadow: none !important;
+}
+nav.custom-nav button.btn-search:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  background: none !important;
+}
+
+/* theme toggle button */
+nav.custom-nav button#theme-toggle {
+  background: none !important;
+  border: 1px solid var(--border) !important;
+  color: var(--muted) !important;
+  padding: .38rem .8rem !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-size: 0.9rem !important;
+  transition: border-color .2s, background .2s, color .2s;
+  line-height: 1 !important;
+  box-shadow: none !important;
+  font-family: inherit !important;
+}
+nav.custom-nav button#theme-toggle:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  background: rgba(124,106,247,0.06) !important;
+}
 
 /* ── HERO ── */
 .hero {
@@ -213,9 +346,19 @@ body::after {
 [data-theme="light"] .t-link:hover { background: rgba(90,79,208,0.08); }
 .t-link:hover .t-out { color: var(--text); }
 
-/* ── CONTAINER (extend_head.html 에서 전역 로드) ── */
+/* ── CONTAINER ── */
+.container { max-width: 1120px; margin: 0 auto; padding: 0 2.5rem; }
+section { position: relative; z-index: 1; }
 .posts-section { padding: 5rem 0 6rem; }
-.section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; }
+.section-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem; letter-spacing: .12em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: .4rem;
+}
 .section-title { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.015em; color: var(--text); }
 .view-all {
   font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--muted);
@@ -274,7 +417,7 @@ body::after {
 [data-theme="light"] .badge-default { background: rgba(0,0,0,0.04); }
 .card-title {
   font-size: 1rem; font-weight: 700; margin-bottom: .5rem;
-  line-height: 1.4; letter-spacing: -0.01em; color: var(--text);
+  line-height: 1.4; letter-spacing: -.01em; color: var(--text);
   word-break: keep-all; overflow-wrap: break-word; white-space: normal; min-width: 0;
 }
 .card-desc {
@@ -389,7 +532,99 @@ body::after {
   font-size: .75rem; color: var(--muted); line-height: 1.5; flex: 1;
 }
 
-/* ── Projects/Tags/Footer: extend_head.html 에서 전역 로드 ── */
+/* ── PROJECTS PAGE ── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem; padding-bottom: 5rem;
+}
+.project-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.75rem;
+  text-decoration: none; color: inherit;
+  display: flex; flex-direction: column; gap: 1rem;
+  transition: border-color .25s, transform .25s, box-shadow .25s, background .3s;
+  position: relative; overflow: hidden;
+}
+.project-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--card-hover-shadow); }
+.project-card-header { display: flex; align-items: center; justify-content: space-between; }
+.project-icon {
+  font-size: 1.6rem; line-height: 1; width: 48px; height: 48px;
+  background: rgba(124,106,247,0.1); border: 1px solid var(--border);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s;
+}
+[data-theme="light"] .project-icon { background: rgba(90,79,208,0.07); }
+.project-links { display: flex; gap: .5rem; }
+.project-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem; color: var(--muted); text-decoration: none;
+  padding: .25rem .55rem; border: 1px solid var(--border); border-radius: 4px;
+  transition: color .2s, border-color .2s;
+}
+.project-link:hover { color: var(--accent); border-color: var(--accent); }
+.project-name { font-size: 1.05rem; font-weight: 800; letter-spacing: -.01em; }
+.project-desc { font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--muted); line-height: 1.65; }
+.project-stack { display: flex; gap: .4rem; flex-wrap: wrap; }
+.stack-tag {
+  font-family: 'JetBrains Mono', monospace; font-size: .63rem; padding: .15rem .5rem;
+  border-radius: 3px; background: rgba(93,232,193,0.08); border: 1px solid rgba(93,232,193,0.2);
+  color: var(--accent2); transition: background 0.3s, border-color 0.3s;
+}
+[data-theme="light"] .stack-tag { background: rgba(26,168,138,0.07); border-color: rgba(26,168,138,0.2); }
+
+/* ── TAGS PAGE ── */
+.tags-cloud { display: flex; flex-wrap: wrap; gap: 1rem; padding-bottom: 5rem; }
+.tag-chip {
+  font-family: 'JetBrains Mono', monospace; font-size: .8rem; padding: .55rem 1.1rem;
+  border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--muted); cursor: pointer; text-decoration: none;
+  transition: border-color .2s, color .2s, background .2s;
+  display: flex; align-items: center; gap: .45rem;
+}
+.tag-chip:hover { border-color: var(--accent); color: var(--accent); background: rgba(124,106,247,0.06); }
+[data-theme="light"] .tag-chip:hover { background: rgba(90,79,208,0.05); }
+.tag-count {
+  font-size: .65rem; padding: .1rem .4rem; border-radius: 3px;
+  background: rgba(124,106,247,0.12); color: var(--accent); transition: background 0.3s;
+}
+[data-theme="light"] .tag-count { background: rgba(90,79,208,0.1); }
+
+/* ── FOOTER ── */
+.custom-footer {
+  border-top: 1px solid var(--border); padding: 2rem 0;
+  font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--muted);
+  transition: border-color 0.3s;
+}
+.custom-footer .container {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { color: var(--muted); text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: var(--accent); }
+
+/* ── GLOW LINE ── */
+.glow-line {
+  position: absolute; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+  opacity: .3;
+}
+
+/* ── HANDCRAFTED SIGNATURE ── */
+.site-signature {
+  text-align: center;
+  padding: .6rem 0 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem;
+  color: var(--muted);
+  opacity: 0.55;
+  letter-spacing: .08em;
+  transition: opacity .3s;
+}
+.site-signature:hover { opacity: 1; }
+.site-signature span { color: var(--accent2); }
 
 /* ── SEARCH OVERLAY ── */
 .search-overlay {
@@ -442,17 +677,15 @@ body::after {
 /* ── RESPONSIVE ── */
 @media (max-width: 960px) {
   .hero-terminal { display: none; }
+  /* 터미널이 사라지면 hero-inner를 중앙 정렬로 전환 */
   .hero-inner { justify-content: center; }
+  .hero-content { max-width: 100%; }
   .hero { padding: 7rem 1.75rem 3rem; }
-
-  /* 블록 자체는 중앙 배치, 내부 요소는 좌측 정렬 그대로 */
-  .hero-content {
-    flex: 0 0 auto;            /* flex: 1 stretch 해제 */
-    width: fit-content;        /* 콘텐츠 너비만큼만 차지 */
-    max-width: min(560px, 100%);
-    margin: 0 auto;            /* 블록 자체 중앙 정렬 */
-    text-align: left;          /* 내부 텍스트 좌측 정렬 유지 */
-  }
+  .hero-title { text-align: center; }
+  .hero-label { display: flex; margin-left: auto; margin-right: auto; }
+  .hero-desc { text-align: center; margin-left: auto; margin-right: auto; }
+  .hero-cta { justify-content: center; }
+  .stats-strip { margin-left: auto; margin-right: auto; }
 }
 @media (max-width: 640px) {
   .custom-nav { padding: .85rem 1.25rem; }
@@ -474,226 +707,3 @@ body::after {
   .hero-content { max-width: 700px; }
 }
 </style>
-
-<!-- ══════════ HOME PAGE ══════════ -->
-{{- partial "nav.html" . -}}
-<div id="home-page">
-
-<!-- ══════════ HERO ══════════ -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-
-  <div class="hero-inner">
-    <div class="hero-content">
-      <div class="hero-label">Engineering Blog · 개발 기록 (미완성, 진행 중)</div>
-      <h1 class="hero-title">
-        기획부터 배포까지,<br>
-        <span class="line2">개발의 모든 흔적</span>
-      </h1>
-      <p class="hero-desc">
-        프로젝트 설계 과정, 커밋 단위 개발 로그,<br>
-        시스템 아키텍처를 기록합니다.
-      </p>
-      <div class="hero-cta">
-        <a href="{{ "/posts/" | relURL }}" class="btn-primary">📝 글 보기</a>
-        <a href="{{ "/projects/" | relURL }}" class="btn-ghost">🗂 프로젝트</a>
-      </div>
-
-      <!-- ★ Hugo 빌드 시 실제 수치 주입 -->
-      <div class="stats-strip">
-        <div class="stat-item">
-          <div class="stat-num">{{ len $allPosts | printf "%02d" }}</div>
-          <div class="stat-label">Posts</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">{{ len $allProjects | printf "%02d" }}</div>
-          <div class="stat-label">Projects</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">{{ if .GitInfo }}{{ .GitInfo.AbbreviatedHash }}{{ else }}--{{ end }}</div>
-          <div class="stat-label">Commit</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ★ 터미널 카드 — Hugo 빌드 시 실제 포스트/커밋 주입 -->
-    <div class="hero-terminal">
-      <div class="terminal-bar">
-        <div class="terminal-dot r"></div>
-        <div class="terminal-dot y"></div>
-        <div class="terminal-dot g"></div>
-        <span class="terminal-title">blog.sh</span>
-      </div>
-      <div class="terminal-body">
-        {{- partial "terminal-data.html" . -}}
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ POSTS SECTION (홈) ══════════ -->
-<div class="container">
-  <section class="posts-section">
-    <div class="section-header">
-      <div>
-        <div class="section-label"># recent posts</div>
-        <h2 class="section-title">최신 글</h2>
-      </div>
-      <a href="{{ "/posts/" | relURL }}" class="view-all">모든 글 보기</a>
-    </div>
-
-    <div class="filter-tabs" id="homeFilterTabs">
-      <button class="tab active" data-filter="all">All</button>
-      <button class="tab" data-filter="project">🗂 Project</button>
-      <button class="tab" data-filter="devlog">📝 Dev Log</button>
-      <button class="tab" data-filter="architecture">⚙️ Architecture</button>
-    </div>
-
-    <div class="posts-grid" id="homePostsGrid">
-
-      {{- range $i, $p := $recentPosts -}}
-
-        {{- $cat := default "default" $p.Params.categories -}}
-        {{- if reflect.IsSlice $cat -}}{{- $cat = index $cat 0 -}}{{- end -}}
-        {{- $catLower := lower $cat -}}
-
-        {{- $badgeClass := "badge-default" -}}
-        {{- $badgeLabel := upper $cat -}}
-        {{- if eq $catLower "project"      -}}{{- $badgeClass = "badge-project"      -}}{{- $badgeLabel = "🗂 Project"      -}}
-        {{- else if eq $catLower "devlog"  -}}{{- $badgeClass = "badge-devlog"       -}}{{- $badgeLabel = "📝 Dev Log"      -}}
-        {{- else if eq $catLower "architecture" -}}{{- $badgeClass = "badge-architecture" -}}{{- $badgeLabel = "⚙️ Architecture" -}}
-        {{- end -}}
-
-        {{- if eq $i 0 -}}
-        <a href="{{ $p.RelPermalink }}" class="post-card featured" data-category="{{ $catLower }}">
-          <div class="featured-left">
-            <div class="featured-label">LATEST</div>
-            <div class="card-badge {{ $badgeClass }}" style="margin-top:.75rem">{{ $badgeLabel }}</div>
-            <div class="card-title" style="font-size:1.35rem; margin-top:.5rem">{{ $p.Title }}</div>
-            <div class="card-desc">{{ $p.Summary | truncate 120 }}</div>
-            <div class="card-tags">
-              {{- range first 3 $p.Params.tags -}}
-              <span class="card-tag">{{ . }}</span>
-              {{- end -}}
-            </div>
-          </div>
-          <div class="featured-right">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)">
-              {{ $p.Date.Format "2006.01.02 15:04" }}
-            </div>
-            <span class="card-arrow">→</span>
-          </div>
-        </a>
-        {{- else -}}
-        <a href="{{ $p.RelPermalink }}" class="post-card" data-category="{{ $catLower }}">
-          <div class="card-badge {{ $badgeClass }}">{{ $badgeLabel }}</div>
-          <div class="card-title">{{ $p.Title }}</div>
-          <div class="card-desc">{{ $p.Summary | truncate 80 }}</div>
-          <div class="card-footer">
-            <div class="card-tags">
-              {{- range first 2 $p.Params.tags -}}
-              <span class="card-tag">{{ . }}</span>
-              {{- end -}}
-            </div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);flex-shrink:0;margin-left:.5rem">
-              {{ $p.Date.Format "2006.01.02 15:04" }}
-            </div>
-            <span class="card-arrow">→</span>
-          </div>
-        </a>
-        {{- end -}}
-      {{- end -}}
-
-      {{- /* 탭 필터 결과 없을 때 표시 (JS로 제어) */ -}}
-      <div class="empty-state" id="homeEmptyState" style="display:none">
-        <div class="big">📭</div>
-        해당 카테고리의 글이 없습니다.
-      </div>
-
-      {{- /* 전체 글이 없을 때 */ -}}
-      {{- if eq (len $allPosts) 0 -}}
-      <div class="empty-state">
-        <div class="big">✍️</div>
-        아직 작성된 글이 없습니다.
-      </div>
-      {{- end -}}
-
-    </div>
-  </section>
-</div>
-
-<!-- CUSTOM FOOTER -->
-<footer class="custom-footer">
-  <div class="glow-line" style="top:0"></div>
-  <div class="container">
-    <div class="footer-left">
-      <span class="footer-byline">handcrafted by <strong>Song Chae Young</strong></span>
-      <span class="footer-copy">© {{ now.Year }} SongChaeYoung.dev</span>
-    </div>
-    <div class="footer-links">
-      <a href="https://github.com/SongChaeYoung98" target="_blank" rel="noopener">GitHub</a>
-      <span class="footer-sep">·</span>
-      <a href="mailto:0.0yeriel@gmail.com">Contact</a>
-    </div>
-  </div>
-</footer>
-
-</div><!-- /home-page -->
-
-
-<!-- ══════════════════════════════════════
-     POSTS 서브페이지
-     Hugo /posts/ 라우트와 연동:
-     layouts/posts/list.html 에서 이 파일의 스타일을 재사용하거나,
-     Hugo가 /posts/를 직접 렌더링하면 아래는 표시되지 않습니다.
-     네비게이션 클릭 시 Hugo가 /posts/ 로 이동하므로
-     SPA 방식이 아닌 실제 Hugo 라우트를 사용합니다.
-═══════════════════════════════════════ -->
-
-<!-- ══════════ SEARCH DATA (extend_header.html 의 검색 기능과 연동) ══════════ -->
-<script>
-window.__searchData = [
-  {{- range .Site.RegularPages -}}
-  {
-    title: {{ .Title | jsonify }},
-    desc:  {{ .Summary | truncate 100 | jsonify }},
-    url:   {{ .RelPermalink | jsonify }},
-    type:  {{ .Type | jsonify }},
-    date:  {{ .Date.Format "2006.01.02 15:04" | jsonify }}
-  },
-  {{- end -}}
-];
-</script>
-
-<script>
-// ─────────────────────────────────
-// FILTER TABS — 빈 결과 처리 포함
-// ─────────────────────────────────
-const homeTabs   = document.getElementById('homeFilterTabs');
-const homeGrid   = document.getElementById('homePostsGrid');
-const emptyState = document.getElementById('homeEmptyState');
-
-if (homeTabs) {
-  homeTabs.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      homeTabs.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const filter = tab.dataset.filter;
-
-      let visible = 0;
-      homeGrid.querySelectorAll('[data-category]').forEach(card => {
-        const show = filter === 'all' || card.dataset.category === filter;
-        card.style.display = show ? '' : 'none';
-        if (show) visible++;
-      });
-
-      if (emptyState) {
-        emptyState.style.display = (visible === 0 && filter !== 'all') ? '' : 'none';
-      }
-    });
-  });
-}
-</script>
-
-{{- end -}}

@@ -1,7 +1,8 @@
 ---
-title: "첫 글"
+title: "Project ASDF"
 date: 2026-03-26
-draft: false
+categories: ["project"] # project | devlog | architecture
+tags: ["설계", "기획"]
 ---
 
 # Hello World!

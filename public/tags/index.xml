@@ -6,6 +6,21 @@
     <description>Recent content in Tags on SongChaeYoung.dev</description>
     <generator>Hugo</generator>
     <language>ko</language>
+    <lastBuildDate>Thu, 26 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>기획</title>
+      <link>http://localhost:1313/tags/%EA%B8%B0%ED%9A%8D/</link>
+      <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/%EA%B8%B0%ED%9A%8D/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>설계</title>
+      <link>http://localhost:1313/tags/%EC%84%A4%EA%B3%84/</link>
+      <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/%EC%84%A4%EA%B3%84/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

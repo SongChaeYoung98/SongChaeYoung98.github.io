@@ -9,12 +9,12 @@
     <lastBuildDate>Thu, 26 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/project/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>asdf</title>
-      <link>http://localhost:1313/posts/2026-03-26-project-asdf/</link>
+      <title>Project ASDF</title>
+      <link>http://localhost:1313/posts/first-post/</link>
       <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/2026-03-26-project-asdf/</guid>
-      <description>&lt;!-- 여기에 내용 작성 --&gt;
-&lt;p&gt;asafdsdfsa&lt;/p&gt;</description>
+      <guid>http://localhost:1313/posts/first-post/</guid>
+      <description>&lt;h1 id=&#34;hello-world&#34;&gt;Hello World!&lt;/h1&gt;
+&lt;p&gt;My First Blog Post.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

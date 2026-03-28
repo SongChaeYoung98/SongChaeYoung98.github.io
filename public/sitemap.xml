@@ -2,41 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2026-03-26T11:26:45+09:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2026-03-26T11:26:45+09:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/test/</loc>
-    <lastmod>2026-03-26T11:26:45+09:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/architecture/</loc>
-    <lastmod>2026-03-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/2026-03-26-architecture-asdf/</loc>
-    <lastmod>2026-03-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/2026-03-26-project-asdf/</loc>
-    <lastmod>2026-03-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2026-03-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/devlog/</loc>
-    <lastmod>2026-03-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/project/</loc>
-    <lastmod>2026-03-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/2026-03-26-project-hello/</loc>
-    <lastmod>2026-03-26T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/first-post/</loc>
     <lastmod>2026-03-26T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/categories/</loc>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+  </url><url>
+    <loc>http://localhost:1313/categories/project/</loc>
+  </url><url>
     <loc>http://localhost:1313/series/</loc>
   </url><url>
+    <loc>http://localhost:1313/</loc>
+  </url><url>
     <loc>http://localhost:1313/tags/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/%EA%B8%B0%ED%9A%8D/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/%EC%84%A4%EA%B3%84/</loc>
   </url>
 </urlset>

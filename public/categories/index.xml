@@ -9,20 +9,6 @@
     <lastBuildDate>Thu, 26 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Architecture</title>
-      <link>http://localhost:1313/categories/architecture/</link>
-      <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/architecture/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Devlog</title>
-      <link>http://localhost:1313/categories/devlog/</link>
-      <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/devlog/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Project</title>
       <link>http://localhost:1313/categories/project/</link>
       <pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate>
