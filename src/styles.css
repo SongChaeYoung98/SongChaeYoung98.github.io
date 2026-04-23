@@ -154,28 +154,32 @@ body {
   box-shadow: 0 20px 55px rgba(0, 0, 0, 0.24), 0 0 34px rgba(90, 228, 255, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.16);
   transform: translate3d(0, 0, 0);
   will-change: transform;
-  transition: box-shadow 0.2s ease, width 0.28s ease, max-height 0.28s ease, border-radius 0.28s ease;
+  transition: box-shadow 0.2s ease, width 0.28s ease, max-height 0.28s ease, border-radius 0.28s ease, transform 0.2s ease;
 }
 
 .terminal-hologram.terminal-open {
   position: fixed;
-  right: max(56px, calc((100vw - 1120px) / 2));
-  top: 318px;
   width: min(360px, calc(100vw - 48px));
-  max-height: 380px;
+  max-height: min(380px, calc(100vh - 112px));
   border-radius: 22px;
   margin-top: 0;
+  overflow: hidden;
+  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.46), 0 0 56px rgba(90, 228, 255, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.18);
 }
 
 .terminal-hologram:hover {
   box-shadow: 0 0 76px rgba(90, 228, 255, 0.26), inset 0 0 40px rgba(255, 255, 255, 0.03);
 }
 
+.terminal-hologram:not(.terminal-open):hover {
+  transform: translateY(-2px);
+}
+
 .terminal-bar {
   display: flex;
   width: 100%;
-  cursor: grab;
-  touch-action: none;
+  cursor: pointer;
+  touch-action: manipulation;
   align-items: center;
   gap: 9px;
   border: 0;
@@ -189,6 +193,8 @@ body {
 }
 
 .terminal-open .terminal-bar {
+  cursor: grab;
+  touch-action: none;
   border-bottom-color: rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.04);
   padding: 11px 14px;
@@ -275,9 +281,12 @@ body {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+  max-height: calc(min(380px, 100vh - 112px) - 48px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
-.terminal-bar:active {
+.terminal-open .terminal-bar:active {
   cursor: grabbing;
 }
 
@@ -345,12 +354,13 @@ body {
 
   .terminal-hologram.terminal-open {
     position: fixed;
-    left: auto;
-    right: 16px;
-    top: 128px;
     width: min(420px, calc(100vw - 32px));
-    max-height: 360px;
+    max-height: min(360px, calc(100vh - 104px));
     border-radius: 22px;
+  }
+
+  .terminal-open .terminal-body {
+    max-height: calc(min(360px, 100vh - 104px) - 48px);
   }
 
   .terminal-hologram::after {

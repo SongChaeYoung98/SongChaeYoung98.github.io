@@ -157,6 +157,35 @@ function TerminalWindow() {
   const recent = [...siteData.posts, ...siteData.projects].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 5);
   const commits = siteData.commits?.length ? siteData.commits : recent.slice(0, 3).map((item) => ({ hash: item.commitHash || "local", title: item.title, url: item.url }));
 
+  function getPanelSize() {
+    const width = Math.min(window.innerWidth - 32, window.innerWidth < 860 ? 420 : 360);
+    const height = Math.min(window.innerHeight - 112, window.innerWidth < 860 ? 360 : 380);
+    return { width, height };
+  }
+
+  function clampPanel(next) {
+    const { width, height } = getPanelSize();
+    const gutter = window.innerWidth < 860 ? 16 : 24;
+    const topGutter = window.innerWidth < 860 ? 88 : 96;
+    return {
+      x: Math.min(Math.max(next.x, gutter), Math.max(gutter, window.innerWidth - width - gutter)),
+      y: Math.min(Math.max(next.y, topGutter), Math.max(topGutter, window.innerHeight - height - gutter)),
+    };
+  }
+
+  function getLaunchPosition() {
+    const { width } = getPanelSize();
+    const rect = terminalRef.current?.getBoundingClientRect();
+    if (!rect) {
+      return clampPanel({ x: window.innerWidth - width - 24, y: 120 });
+    }
+
+    return clampPanel({
+      x: rect.right - width,
+      y: rect.top - 18,
+    });
+  }
+
   useEffect(() => {
     function closeOnOutside(event) {
       if (!open) return;
@@ -169,7 +198,23 @@ function TerminalWindow() {
     return () => document.removeEventListener("pointerdown", closeOnOutside);
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return undefined;
+
+    function keepInView() {
+      setPos((value) => {
+        const clamped = clampPanel(value);
+        nextPos.current = clamped;
+        return clamped;
+      });
+    }
+
+    window.addEventListener("resize", keepInView);
+    return () => window.removeEventListener("resize", keepInView);
+  }, [open]);
+
   function startDrag(event) {
+    if (!open) return;
     drag.current = { x: event.clientX - pos.x, y: event.clientY - pos.y, startX: event.clientX, startY: event.clientY };
     didDrag.current = false;
     window.addEventListener("pointermove", moveDrag);
@@ -180,7 +225,7 @@ function TerminalWindow() {
     if (Math.abs(event.clientX - drag.current.startX) > 4 || Math.abs(event.clientY - drag.current.startY) > 4) {
       didDrag.current = true;
     }
-    nextPos.current = { x: event.clientX - drag.current.x, y: event.clientY - drag.current.y };
+    nextPos.current = clampPanel({ x: event.clientX - drag.current.x, y: event.clientY - drag.current.y });
     if (!frame.current) {
       frame.current = requestAnimationFrame(() => {
         setPos(nextPos.current);
@@ -203,7 +248,7 @@ function TerminalWindow() {
     <div
       ref={terminalRef}
       className={`terminal-hologram liquid-glass ${open ? "terminal-open" : ""}`}
-      style={open ? { transform: `translate3d(${pos.x}px, ${pos.y}px, 0)` } : undefined}
+      style={open ? { left: `${pos.x}px`, top: `${pos.y}px` } : undefined}
     >
       <button
         className="terminal-bar"
@@ -212,14 +257,16 @@ function TerminalWindow() {
           if (didDrag.current) return;
           setOpen((value) => {
             if (!value) {
-              nextPos.current = { x: 0, y: 0 };
-              setPos({ x: 0, y: 0 });
+              const launchPos = getLaunchPosition();
+              nextPos.current = launchPos;
+              setPos(launchPos);
             }
             return !value;
           });
         }}
         type="button"
         aria-label="Open deploy log terminal"
+        aria-expanded={open}
       >
         <span className="terminal-dots" aria-hidden="true">
           <span className="dot bg-[#ff5f57]" />

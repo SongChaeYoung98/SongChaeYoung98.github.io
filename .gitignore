@@ -2,3 +2,5 @@ public/
 .vs/
 .obsidian/
 node_modules/
+.npm-cache/
+.tools/
