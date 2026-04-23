@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { motion, useInView } from "motion/react";
 import Hls from "hls.js";
@@ -162,33 +162,16 @@ function TerminalWindow() {
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const [inHeroRange, setInHeroRange] = useState(true);
+  const [hidden, setHidden] = useState(false);
   const terminalRef = useRef(null);
   const orbitRef = useRef(null);
   const drag = useRef(null);
   const didDrag = useRef(false);
   const frame = useRef(null);
+  const closeTimer = useRef(null);
   const nextDockPos = useRef(dockPos);
   const recent = [...siteData.posts, ...siteData.projects].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 5);
   const commits = siteData.commits?.length ? siteData.commits : recent.slice(0, 3).map((item) => ({ hash: item.commitHash || "local", title: item.title, url: item.url }));
-
-  useEffect(() => {
-    function syncVisibility() {
-      const zone = document.querySelector(".hero-terminal-range");
-      if (!zone) return;
-      const rect = zone.getBoundingClientRect();
-      const visible = rect.bottom > 0 && rect.top < window.innerHeight;
-      setInHeroRange(visible);
-      if (!visible) closeTerminal();
-    }
-
-    syncVisibility();
-    window.addEventListener("scroll", syncVisibility, { passive: true });
-    window.addEventListener("resize", syncVisibility);
-    return () => {
-      window.removeEventListener("scroll", syncVisibility);
-      window.removeEventListener("resize", syncVisibility);
-    };
-  }, []);
 
   function getPanelSize() {
     const width = Math.min(window.innerWidth - 32, window.innerWidth < 860 ? 380 : 328);
@@ -218,15 +201,29 @@ function TerminalWindow() {
     });
   }
 
-  function closeTerminal() {
+  const closeTerminal = useCallback(({ hideAfterClose = false } = {}) => {
     const home = getDockHomePosition();
+    const needsAnimatedHide = hideAfterClose && (open || !hidden || closing);
+    window.clearTimeout(closeTimer.current);
     if (!open) {
       nextDockPos.current = home;
       setDockPos(home);
       didDrag.current = false;
+      if (needsAnimatedHide) {
+        setHidden(false);
+        setClosing(true);
+        closeTimer.current = window.setTimeout(() => {
+          setClosing(false);
+          setHidden(true);
+        }, 340);
+      } else if (!hideAfterClose) {
+        setClosing(false);
+        setHidden(false);
+      }
       return;
     }
 
+    setHidden(false);
     setClosing(true);
     setOpen(false);
     didDrag.current = false;
@@ -234,10 +231,40 @@ function TerminalWindow() {
       nextDockPos.current = home;
       setDockPos(home);
     });
-    window.setTimeout(() => {
+    closeTimer.current = window.setTimeout(() => {
       setClosing(false);
+      setHidden(hideAfterClose);
     }, 340);
-  }
+  }, [closing, hidden, open]);
+
+  useEffect(() => {
+    function syncVisibility() {
+      const zone = document.querySelector(".hero-terminal-range");
+      if (!zone) return;
+      const rect = zone.getBoundingClientRect();
+      const visible = rect.bottom > 0 && rect.top < window.innerHeight;
+      setInHeroRange(visible);
+      if (visible) {
+        window.clearTimeout(closeTimer.current);
+        setClosing(false);
+        setHidden(false);
+        return;
+      }
+      closeTerminal({ hideAfterClose: true });
+    }
+
+    syncVisibility();
+    window.addEventListener("scroll", syncVisibility, { passive: true });
+    window.addEventListener("resize", syncVisibility);
+    return () => {
+      window.removeEventListener("scroll", syncVisibility);
+      window.removeEventListener("resize", syncVisibility);
+    };
+  }, [closeTerminal]);
+
+  useEffect(() => () => {
+    window.clearTimeout(closeTimer.current);
+  }, []);
 
   useEffect(() => {
     function closeOnOutside(event) {
@@ -249,7 +276,7 @@ function TerminalWindow() {
 
     document.addEventListener("pointerdown", closeOnOutside);
     return () => document.removeEventListener("pointerdown", closeOnOutside);
-  }, [open]);
+  }, [open, closeTerminal]);
 
   useEffect(() => {
     function keepInView() {
@@ -308,11 +335,15 @@ function TerminalWindow() {
     window.removeEventListener("pointerup", stopDrag);
   }
 
+  const orbitHidden = hidden && !open && !closing;
+  const orbitInteractive = inHeroRange && !closing && !orbitHidden;
+
   return (
     <div
       ref={orbitRef}
-      className={`terminal-orbit ${open ? "terminal-orbit-open" : ""} ${closing ? "terminal-orbit-closing" : ""} ${inHeroRange ? "" : "terminal-orbit-hidden"}`}
+      className={`terminal-orbit ${open ? "terminal-orbit-open" : ""} ${closing ? "terminal-orbit-closing" : ""} ${orbitHidden ? "terminal-orbit-hidden" : ""} ${orbitInteractive ? "" : "terminal-orbit-inactive"}`}
       style={dockPos ? { left: `${dockPos.x}px`, top: `${dockPos.y}px`, right: "auto", bottom: "auto" } : undefined}
+      aria-hidden={!orbitInteractive}
     >
     <div
       ref={terminalRef}
@@ -326,15 +357,19 @@ function TerminalWindow() {
             didDrag.current = false;
             return;
           }
-          setOpen((value) => {
-            if (value) return value;
-            if (!dockPos) {
-              const home = getDockHomePosition();
-              nextDockPos.current = home;
-              setDockPos(home);
-            }
-            return !value;
-          });
+          if (open) {
+            closeTerminal();
+            return;
+          }
+          window.clearTimeout(closeTimer.current);
+          setClosing(false);
+          setHidden(false);
+          if (!dockPos) {
+            const home = getDockHomePosition();
+            nextDockPos.current = home;
+            setDockPos(home);
+          }
+          setOpen(true);
         }}
         type="button"
         aria-label="Open deploy log terminal"
