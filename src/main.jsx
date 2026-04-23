@@ -80,26 +80,34 @@ function HlsVideo({ src, className = "", desaturate = false }) {
 function BlurText({ text, className = "", delay = 100 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
+  const lines = text.split("\n");
   return (
     <span ref={ref} className={className}>
-      {text.split(" ").map((word, index) => (
-        <motion.span
-          key={`${word}-${index}`}
-          className="inline-block pr-[0.18em]"
-          initial={{ filter: "blur(10px)", opacity: 0, y: 50 }}
-          animate={
-            inView
-              ? {
-                  filter: ["blur(10px)", "blur(5px)", "blur(0px)"],
-                  opacity: [0, 0.5, 1],
-                  y: [50, -5, 0],
+      {lines.map((line, lineIndex) => (
+        <span key={`line-${lineIndex}`} className="block whitespace-nowrap">
+          {line.split(" ").map((word, wordIndex) => {
+            const index = lines.slice(0, lineIndex).reduce((count, item) => count + item.split(" ").length, 0) + wordIndex;
+            return (
+              <motion.span
+                key={`${word}-${lineIndex}-${wordIndex}`}
+                className="inline-block pr-[0.18em]"
+                initial={{ filter: "blur(10px)", opacity: 0, y: 50 }}
+                animate={
+                  inView
+                    ? {
+                        filter: ["blur(10px)", "blur(5px)", "blur(0px)"],
+                        opacity: [0, 0.5, 1],
+                        y: [50, -5, 0],
+                      }
+                    : undefined
                 }
-              : undefined
-          }
-          transition={{ delay: (index * delay) / 1000, duration: 0.7, ease: "easeOut" }}
-        >
-          {word}
-        </motion.span>
+                transition={{ delay: (index * delay) / 1000, duration: 0.7, ease: "easeOut" }}
+              >
+                {word}
+              </motion.span>
+            );
+          })}
+        </span>
       ))}
     </span>
   );
@@ -128,9 +136,9 @@ function Navbar() {
     ["Archive", "#recent-posts"],
   ];
   return (
-    <nav className="fixed left-0 right-0 top-4 z-50 flex items-center justify-between px-8 py-3 lg:px-16">
-      <a href="/" className="flex h-12 w-12 items-center justify-center rounded-full liquid-glass-strong" aria-label="Home">
-        <img src={logoIcon} alt="" className="h-12 w-12 object-contain" />
+    <nav className="sticky top-0 z-50 flex items-center justify-between px-4 py-3 backdrop-blur-md md:fixed md:left-0 md:right-0 md:top-4 md:bg-transparent md:px-8 md:py-3 md:backdrop-blur-0 lg:px-16">
+      <a href="/" className="flex h-11 w-11 items-center justify-center rounded-full liquid-glass-strong md:h-12 md:w-12" aria-label="Home">
+        <img src={logoIcon} alt="" className="h-11 w-11 object-contain md:h-12 md:w-12" />
       </a>
       <div className="hidden items-center rounded-full px-1.5 py-1 liquid-glass md:flex">
         {links.map(([label, href]) => (
@@ -142,6 +150,9 @@ function Navbar() {
           글 보기 <ArrowUpRight className="h-3.5 w-3.5" />
         </a>
       </div>
+      <a href="/posts/" className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2 font-body text-sm font-medium text-black md:hidden">
+        글 보기 <ArrowUpRight className="h-3.5 w-3.5" />
+      </a>
     </nav>
   );
 }
@@ -379,12 +390,12 @@ function Hero() {
       <div className="rain-scene" aria-hidden="true" />
       <div className="absolute inset-0 z-0 bg-black/5" />
       <div className="pointer-events-none absolute bottom-0 z-[1] h-[300px] w-full bg-gradient-to-b from-transparent to-black" />
-      <div className="hero-terminal-range relative z-10 mx-auto flex min-h-[900px] max-w-6xl flex-col items-center px-6 pt-[130px] text-center md:min-h-[940px]">
+      <div className="hero-terminal-range relative z-10 mx-auto flex min-h-[900px] max-w-6xl flex-col items-center px-6 pt-24 text-center md:min-h-[940px] md:pt-[130px]">
         <FadeIn className="mb-8 inline-flex rounded-full px-1 py-1 liquid-glass">
           <span className="rounded-full bg-white px-3 py-1 font-body text-xs font-semibold text-black">Blog</span>
           <span className="px-3 py-1 font-body text-xs text-white/80">{content.hero.badge} ({content.hero.status})</span>
         </FadeIn>
-        <h1 className="max-w-2xl font-heading text-6xl italic leading-[0.8] tracking-[-2px] text-foreground md:text-7xl lg:text-[5.5rem] lg:tracking-[-4px]">
+        <h1 className="max-w-4xl font-heading text-6xl italic leading-[0.8] tracking-[-2px] text-foreground md:text-7xl lg:max-w-5xl lg:text-[5.5rem] lg:tracking-[-4px]">
           <BlurText text={content.hero.title} delay={100} />
         </h1>
         <motion.p

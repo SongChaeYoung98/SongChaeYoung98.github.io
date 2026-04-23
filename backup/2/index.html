@@ -1,4 +1,4 @@
-{{- define "main" }}
+﻿{{- define "main" }}
 
 {{/* ── 전체 포스트 수집 ── */}}
 {{- $allPosts := where site.RegularPages "Type" "posts" }}
@@ -604,10 +604,10 @@
     <div class="hero-left">
       <div class="hero-eyebrow">// Engineering Blog</div>
       <h1 class="hero-title">
-        기획부터 배포까지,<br>
-        <em>개발의 모든 흔적</em>
+        설계부터 운영까지,<br>
+        <em>백엔드 엔지니어링 기록</em>
       </h1>
-      <p class="hero-sub">설계 과정, 커밋 단위 개발 로그, 시스템 아키텍처를 기록합니다.</p>
+      <p class="hero-sub">요구사항을 구조로 풀고, 코드로 구현하고, 운영으로 검증합니다.</p>
     </div>
     <div class="hero-right">
       <div class="hero-date">{{ now.Format "2006. 01. 02" }}</div>
