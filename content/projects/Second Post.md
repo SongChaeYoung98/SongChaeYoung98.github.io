@@ -1,10 +1,11 @@
 ---
-title: "Project ASDF"
+title: "AI Landing Page System"
 date: 2026-03-26
-categories: ["devlog"] # project | devlog | architecture
-tags: ["설계", "기획"]
+categories: ["project"]
+tags: ["react", "hugo"]
+stack: ["React", "Vite", "Hugo"]
 ---
 
-# Hello World!
+# Hello World
 
 My Second Blog Post.

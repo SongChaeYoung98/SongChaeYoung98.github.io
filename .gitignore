@@ -1,3 +1,4 @@
 public/
 .vs/
 .obsidian/
+node_modules/

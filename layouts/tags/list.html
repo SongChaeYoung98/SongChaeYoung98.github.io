@@ -1,56 +1,20 @@
 {{- define "main" -}}
-{{/*
-  layouts/tags/list.html  (taxonomy list)
-  /tags/ 페이지 — index.html 과 동일한 디자인 시스템 사용
-*/}}
+<header class="page-header">
+  <h1>Tags</h1>
+  <div class="post-description">{{ len .Site.Taxonomies.tags }} tags across the blog archive.</div>
+</header>
 
-{{- $allTags := .Site.Taxonomies.tags -}}
-
-{{- partial "custom-styles.html" . -}}
-<style>
-.list-page-wrap { padding-top: 5.5rem; min-height: 100vh; }
-</style>
-
-{{- partial "nav.html" . -}}
-
-<div class="list-page-wrap">
-  <div class="container">
-
-    <!-- PAGE HEADER -->
-    <div class="page-header">
-      <div class="section-label"># tags</div>
-      <h1>Tags</h1>
-      <p>태그별로 글을 탐색하세요. 총 {{ len $allTags }}개의 태그.</p>
-    </div>
-
-    <!-- TAGS CLOUD -->
-    <div class="tags-cloud">
-      {{- range $name, $pages := $allTags -}}
-      <a href="{{ "/tags/" | relURL }}{{ $name | urlize }}/" class="tag-chip">
-        {{ $name }}
-        <span class="tag-count">{{ len $pages }}</span>
-      </a>
-      {{- end -}}
-
-      {{- if eq (len $allTags) 0 -}}
-      <div class="empty-state" style="width:100%">
-        <div class="big">🏷️</div>
-        아직 태그가 없습니다.
-      </div>
-      {{- end -}}
-    </div><!-- /tags-cloud -->
-
-  </div><!-- /container -->
-</div><!-- /list-page-wrap -->
-
-<script>
-window.__searchData = [
-  {{- range .Site.RegularPages -}}
-  { title: {{ .Title | jsonify }}, desc: {{ .Summary | truncate 100 | jsonify }},
-    url: {{ .RelPermalink | jsonify }}, type: {{ .Type | jsonify }},
-    date: {{ .Date.Format "2006.01.02 15:04" | jsonify }} },
+{{- if .Site.Taxonomies.tags -}}
+<ul class="terms-tags">
+  {{- range $name, $pages := .Site.Taxonomies.tags -}}
+  <li>
+    <a href="{{ "/tags/" | relURL }}{{ $name | urlize }}/">
+      {{ $name }} <sup><strong><sup>{{ len $pages }}</sup></strong></sup>
+    </a>
+  </li>
   {{- end -}}
-];
-</script>
-
+</ul>
+{{- else -}}
+<p>No tags yet. Add <code>tags</code> to Markdown front matter.</p>
+{{- end -}}
 {{- end -}}
