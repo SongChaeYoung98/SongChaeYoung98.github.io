@@ -147,50 +147,92 @@ function Navbar() {
 }
 
 function TerminalWindow() {
-  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [dockPos, setDockPos] = useState(null);
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const [inHeroRange, setInHeroRange] = useState(true);
   const terminalRef = useRef(null);
+  const orbitRef = useRef(null);
   const drag = useRef(null);
   const didDrag = useRef(false);
   const frame = useRef(null);
-  const nextPos = useRef(pos);
+  const nextDockPos = useRef(dockPos);
   const recent = [...siteData.posts, ...siteData.projects].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 5);
   const commits = siteData.commits?.length ? siteData.commits : recent.slice(0, 3).map((item) => ({ hash: item.commitHash || "local", title: item.title, url: item.url }));
 
+  useEffect(() => {
+    function syncVisibility() {
+      const zone = document.querySelector(".hero-terminal-range");
+      if (!zone) return;
+      const rect = zone.getBoundingClientRect();
+      const visible = rect.bottom > 0 && rect.top < window.innerHeight;
+      setInHeroRange(visible);
+      if (!visible) closeTerminal();
+    }
+
+    syncVisibility();
+    window.addEventListener("scroll", syncVisibility, { passive: true });
+    window.addEventListener("resize", syncVisibility);
+    return () => {
+      window.removeEventListener("scroll", syncVisibility);
+      window.removeEventListener("resize", syncVisibility);
+    };
+  }, []);
+
   function getPanelSize() {
-    const width = Math.min(window.innerWidth - 32, window.innerWidth < 860 ? 420 : 360);
+    const width = Math.min(window.innerWidth - 32, window.innerWidth < 860 ? 380 : 328);
     const height = Math.min(window.innerHeight - 112, window.innerWidth < 860 ? 360 : 380);
     return { width, height };
   }
 
-  function clampPanel(next) {
+  function clampDock(next) {
     const { width, height } = getPanelSize();
-    const gutter = window.innerWidth < 860 ? 16 : 24;
-    const topGutter = window.innerWidth < 860 ? 88 : 96;
+    const gutter = window.innerWidth < 860 ? 12 : 16;
+    const maxX = Math.max(gutter, window.innerWidth - width - gutter);
+    const maxY = Math.max(gutter, window.innerHeight - height - gutter);
     return {
-      x: Math.min(Math.max(next.x, gutter), Math.max(gutter, window.innerWidth - width - gutter)),
-      y: Math.min(Math.max(next.y, topGutter), Math.max(topGutter, window.innerHeight - height - gutter)),
+      x: Math.min(Math.max(next.x, gutter), maxX),
+      y: Math.min(Math.max(next.y, gutter), maxY),
     };
   }
 
-  function getLaunchPosition() {
+  function getDockHomePosition() {
     const { width } = getPanelSize();
-    const rect = terminalRef.current?.getBoundingClientRect();
-    if (!rect) {
-      return clampPanel({ x: window.innerWidth - width - 24, y: 120 });
+    const mobile = window.innerWidth < 860;
+    const rightInset = mobile ? 16 : 20;
+    const y = Math.round(window.innerHeight * (mobile ? 0.52 : 0.44));
+    return clampDock({
+      x: window.innerWidth - width - rightInset,
+      y,
+    });
+  }
+
+  function closeTerminal() {
+    const home = getDockHomePosition();
+    if (!open) {
+      nextDockPos.current = home;
+      setDockPos(home);
+      didDrag.current = false;
+      return;
     }
 
-    return clampPanel({
-      x: rect.right - width,
-      y: rect.top - 18,
+    setClosing(true);
+    setOpen(false);
+    didDrag.current = false;
+    requestAnimationFrame(() => {
+      nextDockPos.current = home;
+      setDockPos(home);
     });
+    window.setTimeout(() => {
+      setClosing(false);
+    }, 340);
   }
 
   useEffect(() => {
     function closeOnOutside(event) {
       if (!open) return;
       if (terminalRef.current && !terminalRef.current.contains(event.target)) {
-        setOpen(false);
+        closeTerminal();
       }
     }
 
@@ -199,12 +241,16 @@ function TerminalWindow() {
   }, [open]);
 
   useEffect(() => {
-    if (!open) return undefined;
-
     function keepInView() {
-      setPos((value) => {
-        const clamped = clampPanel(value);
-        nextPos.current = clamped;
+      setDockPos((value) => {
+        if (!open) {
+          const home = getDockHomePosition();
+          nextDockPos.current = home;
+          return home;
+        }
+        if (!value) return value;
+        const clamped = clampDock(value);
+        nextDockPos.current = clamped;
         return clamped;
       });
     }
@@ -214,8 +260,15 @@ function TerminalWindow() {
   }, [open]);
 
   function startDrag(event) {
-    if (!open) return;
-    drag.current = { x: event.clientX - pos.x, y: event.clientY - pos.y, startX: event.clientX, startY: event.clientY };
+    if (!open) {
+      didDrag.current = false;
+      return;
+    }
+    if (event.target.closest("a")) return;
+    event.preventDefault();
+    const rect = orbitRef.current?.getBoundingClientRect();
+    const origin = rect ? { x: rect.left, y: rect.top } : dockPos || getDockHomePosition();
+    drag.current = { x: event.clientX - origin.x, y: event.clientY - origin.y, startX: event.clientX, startY: event.clientY };
     didDrag.current = false;
     window.addEventListener("pointermove", moveDrag);
     window.addEventListener("pointerup", stopDrag);
@@ -225,10 +278,10 @@ function TerminalWindow() {
     if (Math.abs(event.clientX - drag.current.startX) > 4 || Math.abs(event.clientY - drag.current.startY) > 4) {
       didDrag.current = true;
     }
-    nextPos.current = clampPanel({ x: event.clientX - drag.current.x, y: event.clientY - drag.current.y });
+    nextDockPos.current = clampDock({ x: event.clientX - drag.current.x, y: event.clientY - drag.current.y });
     if (!frame.current) {
       frame.current = requestAnimationFrame(() => {
-        setPos(nextPos.current);
+        setDockPos(nextDockPos.current);
         frame.current = null;
       });
     }
@@ -239,27 +292,35 @@ function TerminalWindow() {
       cancelAnimationFrame(frame.current);
       frame.current = null;
     }
-    setPos(nextPos.current);
+    setDockPos(nextDockPos.current);
     window.removeEventListener("pointermove", moveDrag);
     window.removeEventListener("pointerup", stopDrag);
   }
 
   return (
     <div
+      ref={orbitRef}
+      className={`terminal-orbit ${open ? "terminal-orbit-open" : ""} ${closing ? "terminal-orbit-closing" : ""} ${inHeroRange ? "" : "terminal-orbit-hidden"}`}
+      style={dockPos ? { left: `${dockPos.x}px`, top: `${dockPos.y}px`, right: "auto", bottom: "auto" } : undefined}
+    >
+    <div
       ref={terminalRef}
-      className={`terminal-hologram liquid-glass ${open ? "terminal-open" : ""}`}
-      style={open ? { left: `${pos.x}px`, top: `${pos.y}px` } : undefined}
+      className={`terminal-hologram liquid-glass ${open ? "terminal-open" : ""} ${closing ? "terminal-closing" : ""}`}
+      onPointerDown={startDrag}
     >
       <button
         className="terminal-bar"
-        onPointerDown={startDrag}
         onClick={() => {
-          if (didDrag.current) return;
+          if (didDrag.current) {
+            didDrag.current = false;
+            return;
+          }
           setOpen((value) => {
-            if (!value) {
-              const launchPos = getLaunchPosition();
-              nextPos.current = launchPos;
-              setPos(launchPos);
+            if (value) return value;
+            if (!dockPos) {
+              const home = getDockHomePosition();
+              nextDockPos.current = home;
+              setDockPos(home);
             }
             return !value;
           });
@@ -275,7 +336,7 @@ function TerminalWindow() {
         </span>
         <span className="terminal-mini-icon" aria-hidden="true">$</span>
         <span className="terminal-title">
-          <span className="terminal-title-closed">log.sh</span>
+          <span className="terminal-title-closed">log.</span>
           <span className="terminal-title-open">{content.terminal.title}</span>
         </span>
         <span className="terminal-mini-meta" aria-hidden="true">recent</span>
@@ -301,6 +362,7 @@ function TerminalWindow() {
         <div><span className="text-cyan-200">{content.terminal.cwd}</span> <span className="text-white">$</span> <span className="terminal-cursor" /></div>
       </div>
     </div>
+    </div>
   );
 }
 
@@ -317,7 +379,7 @@ function Hero() {
       <div className="rain-scene" aria-hidden="true" />
       <div className="absolute inset-0 z-0 bg-black/5" />
       <div className="pointer-events-none absolute bottom-0 z-[1] h-[300px] w-full bg-gradient-to-b from-transparent to-black" />
-      <div className="relative z-10 mx-auto flex min-h-[900px] max-w-6xl flex-col items-center px-6 pt-[130px] text-center md:min-h-[940px]">
+      <div className="hero-terminal-range relative z-10 mx-auto flex min-h-[900px] max-w-6xl flex-col items-center px-6 pt-[130px] text-center md:min-h-[940px]">
         <FadeIn className="mb-8 inline-flex rounded-full px-1 py-1 liquid-glass">
           <span className="rounded-full bg-white px-3 py-1 font-body text-xs font-semibold text-black">Blog</span>
           <span className="px-3 py-1 font-body text-xs text-white/80">{content.hero.badge} ({content.hero.status})</span>
@@ -341,11 +403,8 @@ function Hero() {
         >
           <a href="/posts/"><Button>{content.hero.primaryCta} <ArrowUpRight className="h-4 w-4" /></Button></a>
           <a href="/projects/"><Button variant="ghost" className="px-2"><Play className="h-4 w-4 fill-white" /> {content.hero.secondaryCta}</Button></a>
-          <span className="terminal-slot">
-            <TerminalWindow />
-          </span>
         </motion.div>
-        <div className="mt-10 grid w-full max-w-xl grid-cols-3 overflow-hidden rounded-2xl liquid-glass">
+        <div className="hero-metrics mt-10 grid w-full max-w-xl grid-cols-3 overflow-hidden rounded-2xl liquid-glass">
           {[
             [postCount, "Posts"],
             [projectCount, "Projects"],
@@ -609,6 +668,7 @@ function App() {
   return (
     <div className="min-h-screen bg-black">
       <Navbar />
+      <TerminalWindow />
       <Hero />
       <StartSection />
       <FeaturesChess />

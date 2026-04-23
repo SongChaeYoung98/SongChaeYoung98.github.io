@@ -127,21 +127,51 @@ body {
   opacity: 0.42;
 }
 
-.terminal-slot {
-  position: relative;
-  display: inline-flex;
-  height: 42px;
-  width: 86px;
-  flex: 0 0 86px;
-}
-
 .hero-cta-row {
   flex-wrap: nowrap;
 }
 
+.hero-metrics {
+  position: relative;
+  z-index: 2;
+}
+
+.terminal-orbit {
+  position: fixed;
+  right: 20px;
+  top: 44vh;
+  z-index: 2147483000;
+  display: flex;
+  width: min(328px, calc(100vw - 48px));
+  min-height: 42px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  pointer-events: none;
+  transform-origin: top right;
+  transition: opacity 0.24s ease, transform 0.28s ease;
+}
+
+.terminal-orbit .terminal-hologram {
+  pointer-events: auto;
+}
+
+.terminal-orbit.terminal-orbit-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(18px, 0, 0) scale(0.94);
+}
+
+.terminal-orbit.terminal-orbit-closing {
+  transition: left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.24s ease, transform 0.28s ease;
+}
+
+.terminal-orbit .terminal-hologram:not(.terminal-open) {
+  animation: terminalFloat 4.2s ease-in-out infinite;
+}
+
 .terminal-hologram {
   position: relative;
-  z-index: 6;
+  z-index: 2147483000;
   display: inline-block;
   flex: 0 0 auto;
   align-self: center;
@@ -154,17 +184,29 @@ body {
   box-shadow: 0 20px 55px rgba(0, 0, 0, 0.24), 0 0 34px rgba(90, 228, 255, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.16);
   transform: translate3d(0, 0, 0);
   will-change: transform;
-  transition: box-shadow 0.2s ease, width 0.28s ease, max-height 0.28s ease, border-radius 0.28s ease, transform 0.2s ease;
+  will-change: transform, opacity, width, max-height;
+  transform-origin: top right;
+  transition: box-shadow 0.2s ease, width 0.32s ease, max-height 0.32s ease, border-radius 0.32s ease, transform 0.32s ease;
 }
 
 .terminal-hologram.terminal-open {
-  position: fixed;
-  width: min(360px, calc(100vw - 48px));
+  position: relative;
+  z-index: 2147483001;
+  width: 100%;
   max-height: min(380px, calc(100vh - 112px));
   border-radius: 22px;
   margin-top: 0;
   overflow: hidden;
+  cursor: grab;
   box-shadow: 0 26px 90px rgba(0, 0, 0, 0.46), 0 0 56px rgba(90, 228, 255, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.18);
+}
+
+.terminal-hologram.terminal-closing {
+  width: 86px;
+  max-height: 42px;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.24), 0 0 34px rgba(90, 228, 255, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.16);
 }
 
 .terminal-hologram:hover {
@@ -172,7 +214,8 @@ body {
 }
 
 .terminal-hologram:not(.terminal-open):hover {
-  transform: translateY(-2px);
+  animation: none;
+  transform: translateY(-3px);
 }
 
 .terminal-bar {
@@ -181,6 +224,7 @@ body {
   cursor: pointer;
   touch-action: manipulation;
   align-items: center;
+  justify-content: center;
   gap: 9px;
   border: 0;
   border-bottom: 1px solid transparent;
@@ -195,9 +239,17 @@ body {
 .terminal-open .terminal-bar {
   cursor: grab;
   touch-action: none;
+  justify-content: flex-start;
   border-bottom-color: rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.04);
   padding: 11px 14px;
+}
+
+.terminal-closing .terminal-bar {
+  justify-content: center;
+  padding: 6px 8px;
+  border-bottom-color: transparent;
+  background: transparent;
 }
 
 .terminal-dots {
@@ -208,6 +260,10 @@ body {
 
 .terminal-open .terminal-dots {
   display: inline-flex;
+}
+
+.terminal-closing .terminal-dots {
+  display: none;
 }
 
 .terminal-mini-icon {
@@ -229,9 +285,12 @@ body {
   display: none;
 }
 
+.terminal-closing .terminal-mini-icon {
+  display: inline-flex;
+}
+
 .terminal-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
   color: rgba(255, 255, 255, 0.72);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 11px;
@@ -245,13 +304,29 @@ body {
   display: none;
 }
 
+.terminal-closing .terminal-title-closed {
+  display: inline;
+}
+
 .terminal-open .terminal-title-open {
   display: inline;
 }
 
+.terminal-closing .terminal-title-open {
+  display: none;
+}
+
 .terminal-open .terminal-title {
   margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: rgba(255, 255, 255, 0.55);
+}
+
+.terminal-closing .terminal-title {
+  margin-left: 0;
+  overflow: visible;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .terminal-mini-meta {
@@ -274,7 +349,7 @@ body {
   opacity: 0;
   transform: translateY(-6px);
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.24s ease, transform 0.24s ease;
 }
 
 .terminal-open .terminal-body {
@@ -286,8 +361,19 @@ body {
   overscroll-behavior: contain;
 }
 
-.terminal-open .terminal-bar:active {
+.terminal-closing .terminal-body {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+.terminal-open .terminal-bar:active,
+.terminal-hologram.terminal-open:active {
   cursor: grabbing;
+}
+
+.terminal-open .terminal-body a {
+  cursor: pointer;
 }
 
 .dot {
@@ -333,19 +419,32 @@ body {
   }
 }
 
+@keyframes terminalFloat {
+  0%,
+  100% {
+    transform: translate3d(0, -4px, 0);
+  }
+  50% {
+    transform: translate3d(0, 5px, 0);
+  }
+}
+
 @media (max-width: 860px) {
   .hero-cta-row {
     flex-wrap: nowrap;
     gap: 8px;
   }
 
-  .terminal-slot {
-    width: 86px;
-    flex-basis: 86px;
+  .terminal-orbit {
+    top: 52vh;
+    right: 16px;
+    bottom: auto;
+    width: min(380px, calc(100vw - 32px));
+    min-height: 42px;
   }
 
   .terminal-hologram {
-    z-index: 5;
+    z-index: 2147483000;
     width: 86px;
     max-height: 42px;
     margin: 0;
@@ -353,26 +452,14 @@ body {
   }
 
   .terminal-hologram.terminal-open {
-    position: fixed;
-    width: min(420px, calc(100vw - 32px));
+    position: relative;
+    width: 100%;
     max-height: min(360px, calc(100vh - 104px));
     border-radius: 22px;
   }
 
   .terminal-open .terminal-body {
     max-height: calc(min(360px, 100vh - 104px) - 48px);
-  }
-
-  .terminal-hologram::after {
-    content: "";
-    position: absolute;
-    right: 16px;
-    top: 16px;
-    pointer-events: none;
-  }
-
-  .terminal-hologram.terminal-open::after {
-    content: "";
   }
 
 }
