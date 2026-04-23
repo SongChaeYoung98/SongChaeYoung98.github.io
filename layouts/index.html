@@ -20,37 +20,37 @@ window.__BLOG_DATA__ = {
   posts: [
     {{- range $posts -}}
     {
-      title: {{ .Title | jsonify }},
-      summary: {{ (.Summary | plainify | truncate 180) | jsonify }},
-      url: {{ .RelPermalink | jsonify }},
+      title: {{ .Title | jsonify | safeJS }},
+      summary: {{ (.Summary | plainify | truncate 180) | jsonify | safeJS }},
+      url: {{ .RelPermalink | jsonify | safeJS }},
       section: "post",
-      date: {{ .Date.Format "2006-01-02T15:04:05Z07:00" | jsonify }},
-      dateLabel: {{ .Date.Format "2006.01.02" | jsonify }},
-      tags: {{ .Params.tags | default slice | jsonify }},
-      commitHash: {{ if .GitInfo }}{{ .GitInfo.AbbreviatedHash | jsonify }}{{ else }}""{{ end }}
+      date: {{ .Date.Format "2006-01-02T15:04:05Z07:00" | jsonify | safeJS }},
+      dateLabel: {{ .Date.Format "2006.01.02" | jsonify | safeJS }},
+      tags: {{ .Params.tags | default slice | jsonify | safeJS }},
+      commitHash: {{ if .GitInfo }}{{ .GitInfo.AbbreviatedHash | jsonify | safeJS }}{{ else }}""{{ end }}
     },
     {{- end -}}
   ],
   projects: [
     {{- range $projects -}}
     {
-      title: {{ .Title | jsonify }},
-      summary: {{ (.Summary | plainify | truncate 180) | jsonify }},
-      url: {{ .RelPermalink | jsonify }},
+      title: {{ .Title | jsonify | safeJS }},
+      summary: {{ (.Summary | plainify | truncate 180) | jsonify | safeJS }},
+      url: {{ .RelPermalink | jsonify | safeJS }},
       section: "project",
-      date: {{ .Date.Format "2006-01-02T15:04:05Z07:00" | jsonify }},
-      dateLabel: {{ .Date.Format "2006.01.02" | jsonify }},
-      tags: {{ .Params.tags | default slice | jsonify }},
-      commitHash: {{ if .GitInfo }}{{ .GitInfo.AbbreviatedHash | jsonify }}{{ else }}""{{ end }}
+      date: {{ .Date.Format "2006-01-02T15:04:05Z07:00" | jsonify | safeJS }},
+      dateLabel: {{ .Date.Format "2006.01.02" | jsonify | safeJS }},
+      tags: {{ .Params.tags | default slice | jsonify | safeJS }},
+      commitHash: {{ if .GitInfo }}{{ .GitInfo.AbbreviatedHash | jsonify | safeJS }}{{ else }}""{{ end }}
     },
     {{- end -}}
   ],
   commits: [
     {{- range first 3 $pages -}}
     {
-      hash: {{ if .GitInfo }}{{ .GitInfo.AbbreviatedHash | jsonify }}{{ else }}"local"{{ end }},
-      title: {{ .Title | jsonify }},
-      url: {{ .RelPermalink | jsonify }}
+      hash: {{ if .GitInfo }}{{ .GitInfo.AbbreviatedHash | jsonify | safeJS }}{{ else }}"local"{{ end }},
+      title: {{ .Title | jsonify | safeJS }},
+      url: {{ .RelPermalink | jsonify | safeJS }}
     },
     {{- end -}}
   ]
