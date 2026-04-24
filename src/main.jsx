@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { motion, useInView } from "motion/react";
 import Hls from "hls.js";
-import { ArrowUpRight, BarChart3, Database, FileText, GitBranch, Play, Server, Shield, Zap } from "lucide-react";
+import { ArrowUp, ArrowUpRight, BarChart3, Database, FileText, GitBranch, Play, Server, Shield, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import featureOne from "@/assets/feature-1.gif";
 import featureTwo from "@/assets/feature-2.gif";
@@ -781,11 +781,58 @@ function BlogIndex() {
   );
 }
 
+function ScrollToTopControl() {
+  const [visible, setVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    function syncScrollState() {
+      const scrollTop = window.scrollY || window.pageYOffset || 0;
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const nextProgress = scrollable > 0 ? Math.min(scrollTop / scrollable, 1) : 0;
+      setVisible(scrollTop > 520);
+      setProgress(nextProgress);
+    }
+
+    syncScrollState();
+    window.addEventListener("scroll", syncScrollState, { passive: true });
+    window.addEventListener("resize", syncScrollState);
+    return () => {
+      window.removeEventListener("scroll", syncScrollState);
+      window.removeEventListener("resize", syncScrollState);
+    };
+  }, []);
+
+  return (
+    <motion.button
+      type="button"
+      className={`top-control ${visible ? "top-control-visible" : ""}`}
+      aria-label="Back to top"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      style={{ "--top-progress": progress }}
+      initial={false}
+      animate={{
+        opacity: visible ? 1 : 0,
+        y: visible ? 0 : 20,
+        scale: visible ? 1 : 0.98,
+      }}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <span className="top-control-progress" aria-hidden="true" />
+      <span className="top-control-core">
+        <span className="top-control-core-grid" aria-hidden="true" />
+        <ArrowUp className="h-4 w-4" />
+      </span>
+    </motion.button>
+  );
+}
+
 function App() {
   return (
     <div className="min-h-screen bg-black">
       <Navbar />
       <TerminalWindow />
+      <ScrollToTopControl />
       <Hero />
       <StartSection />
       <FeaturesChess />
