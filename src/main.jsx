@@ -158,7 +158,7 @@ function Navbar() {
 }
 
 function TerminalWindow() {
-  const [dockPos, setDockPos] = useState(null);
+  const [dockPos, setDockPos] = useState(() => getDockHomePosition());
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const [inHeroRange, setInHeroRange] = useState(true);
@@ -169,7 +169,9 @@ function TerminalWindow() {
   const didDrag = useRef(false);
   const frame = useRef(null);
   const closeTimer = useRef(null);
+  const scrollPauseTimer = useRef(null);
   const nextDockPos = useRef(dockPos);
+  const homeDockPos = useRef(dockPos);
   const recent = [...siteData.posts, ...siteData.projects].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 5);
   const commits = siteData.commits?.length ? siteData.commits : recent.slice(0, 3).map((item) => ({ hash: item.commitHash || "local", title: item.title, url: item.url }));
 
@@ -201,8 +203,15 @@ function TerminalWindow() {
     });
   }
 
+  function getStableHomeDockPosition() {
+    if (!homeDockPos.current) {
+      homeDockPos.current = getDockHomePosition();
+    }
+    return homeDockPos.current;
+  }
+
   const closeTerminal = useCallback(({ hideAfterClose = false } = {}) => {
-    const home = getDockHomePosition();
+    const home = getStableHomeDockPosition();
     const needsAnimatedHide = hideAfterClose && (open || !hidden || closing);
     window.clearTimeout(closeTimer.current);
     if (!open) {
@@ -264,6 +273,25 @@ function TerminalWindow() {
 
   useEffect(() => () => {
     window.clearTimeout(closeTimer.current);
+    window.clearTimeout(scrollPauseTimer.current);
+  }, []);
+
+  useEffect(() => {
+    function pauseFloatingOnScroll() {
+      const orbit = orbitRef.current;
+      if (!orbit) return;
+      orbit.classList.add("terminal-orbit-scroll-paused");
+      window.clearTimeout(scrollPauseTimer.current);
+      scrollPauseTimer.current = window.setTimeout(() => {
+        orbit.classList.remove("terminal-orbit-scroll-paused");
+      }, 140);
+    }
+
+    window.addEventListener("scroll", pauseFloatingOnScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", pauseFloatingOnScroll);
+      window.clearTimeout(scrollPauseTimer.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -283,6 +311,7 @@ function TerminalWindow() {
       setDockPos((value) => {
         if (!open) {
           const home = getDockHomePosition();
+          homeDockPos.current = home;
           nextDockPos.current = home;
           return home;
         }
@@ -342,7 +371,7 @@ function TerminalWindow() {
     <div
       ref={orbitRef}
       className={`terminal-orbit ${open ? "terminal-orbit-open" : ""} ${closing ? "terminal-orbit-closing" : ""} ${orbitHidden ? "terminal-orbit-hidden" : ""} ${orbitInteractive ? "" : "terminal-orbit-inactive"}`}
-      style={dockPos ? { left: `${dockPos.x}px`, top: `${dockPos.y}px`, right: "auto", bottom: "auto" } : undefined}
+      style={{ left: `${dockPos.x}px`, top: `${dockPos.y}px`, right: "auto", bottom: "auto" }}
       aria-hidden={!orbitInteractive}
     >
     <div
@@ -364,11 +393,6 @@ function TerminalWindow() {
           window.clearTimeout(closeTimer.current);
           setClosing(false);
           setHidden(false);
-          if (!dockPos) {
-            const home = getDockHomePosition();
-            nextDockPos.current = home;
-            setDockPos(home);
-          }
           setOpen(true);
         }}
         type="button"

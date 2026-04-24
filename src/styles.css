@@ -5,6 +5,13 @@
 @tailwind utilities;
 
 :root {
+  --theme: #000;
+  --entry: rgba(255, 255, 255, 0.055);
+  --secondary: rgba(255, 255, 255, 0.72);
+  --tertiary: rgba(255, 255, 255, 0.46);
+  --content: rgba(255, 255, 255, 0.84);
+  --code-bg: rgba(255, 255, 255, 0.08);
+  --code-block-bg: #101014;
   --background: 213 45% 67%;
   --foreground: 0 0% 100%;
   --card: 213 45% 62%;
@@ -31,6 +38,8 @@
 html {
   scroll-behavior: smooth;
   background: #000;
+  scrollbar-color: rgba(255, 255, 255, 0.24) transparent;
+  scrollbar-width: thin;
 }
 
 body {
@@ -39,10 +48,61 @@ body {
   background: #000;
   color: #fff;
   font-family: "Barlow", sans-serif;
+  scrollbar-color: rgba(255, 255, 255, 0.24) transparent;
+  scrollbar-width: thin;
+}
+
+#root,
+* {
+  scrollbar-color: rgba(255, 255, 255, 0.24) transparent;
 }
 
 * {
   box-sizing: border-box;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+#root::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+#root::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+#root::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.34);
+  background-clip: padding-box;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#root::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+  background: transparent;
+}
+
+@media screen and (min-width: 768px) {
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  #root::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
 }
 
 @layer components {
@@ -149,7 +209,7 @@ body {
   pointer-events: none;
   visibility: visible;
   transform-origin: top right;
-  transition: opacity 0.24s ease, transform 0.28s ease, visibility 0s linear 0s;
+  transition: opacity 0.24s ease, visibility 0s linear 0s;
 }
 
 .terminal-orbit .terminal-hologram {
@@ -164,16 +224,15 @@ body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translate3d(18px, 0, 0) scale(0.94);
-  transition: opacity 0.24s ease, transform 0.28s ease, visibility 0s linear 0.28s;
+  transition: opacity 0.24s ease, visibility 0s linear 0.28s;
 }
 
 .terminal-orbit.terminal-orbit-closing {
-  transition: left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.24s ease, transform 0.28s ease;
+  transition: left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.24s ease;
 }
 
-.terminal-orbit .terminal-hologram:not(.terminal-open) {
-  animation: terminalFloat 4.2s ease-in-out infinite;
+.terminal-orbit.terminal-orbit-scroll-paused .terminal-hologram:not(.terminal-open):not(.terminal-closing) {
+  animation-play-state: paused;
 }
 
 .terminal-hologram {
@@ -220,11 +279,6 @@ body {
   box-shadow: 0 0 76px rgba(90, 228, 255, 0.26), inset 0 0 40px rgba(255, 255, 255, 0.03);
 }
 
-.terminal-hologram:not(.terminal-open):hover {
-  animation: none;
-  transform: translateY(-3px);
-}
-
 .terminal-bar {
   display: flex;
   width: 100%;
@@ -243,6 +297,12 @@ body {
   user-select: none;
 }
 
+.terminal-hologram:not(.terminal-open):not(.terminal-closing) {
+  animation: terminalBarFloat 5.6s cubic-bezier(0.37, 0, 0.2, 1) infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
 .terminal-open .terminal-bar {
   cursor: grab;
   touch-action: none;
@@ -257,6 +317,7 @@ body {
   padding: 6px 8px;
   border-bottom-color: transparent;
   background: transparent;
+  animation: none;
 }
 
 .terminal-dots {
@@ -379,6 +440,10 @@ body {
   cursor: grabbing;
 }
 
+.terminal-hologram:not(.terminal-open):hover {
+  animation-play-state: paused;
+}
+
 .terminal-open .terminal-body a {
   cursor: pointer;
 }
@@ -426,13 +491,13 @@ body {
   }
 }
 
-@keyframes terminalFloat {
+@keyframes terminalBarFloat {
   0%,
   100% {
-    transform: translate3d(0, -4px, 0);
+    transform: translate3d(0, -2px, 0);
   }
   50% {
-    transform: translate3d(0, 5px, 0);
+    transform: translate3d(0, 2px, 0);
   }
 }
 
