@@ -252,7 +252,7 @@ body::-webkit-scrollbar,
   will-change: transform;
   will-change: transform, opacity, width, max-height;
   transform-origin: top right;
-  transition: box-shadow 0.2s ease, width 0.32s ease, max-height 0.32s ease, border-radius 0.32s ease, transform 0.32s ease;
+  transition: box-shadow 0.2s ease, width 0.32s ease, max-height 0.32s ease, height 0.32s ease, left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.32s ease, transform 0.32s ease;
 }
 
 .terminal-hologram.terminal-open {
@@ -269,9 +269,11 @@ body::-webkit-scrollbar,
 
 .terminal-hologram.terminal-closing {
   width: 86px;
+  height: 42px;
   max-height: 42px;
   border-radius: 16px;
   cursor: pointer;
+  overflow: hidden;
   box-shadow: 0 20px 55px rgba(0, 0, 0, 0.24), 0 0 34px rgba(90, 228, 255, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.16);
 }
 

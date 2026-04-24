@@ -161,6 +161,7 @@ function TerminalWindow() {
   const [dockPos, setDockPos] = useState(() => getDockHomePosition());
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [closingRect, setClosingRect] = useState(null);
   const [inHeroRange, setInHeroRange] = useState(true);
   const [hidden, setHidden] = useState(false);
   const terminalRef = useRef(null);
@@ -169,6 +170,7 @@ function TerminalWindow() {
   const didDrag = useRef(false);
   const frame = useRef(null);
   const closeTimer = useRef(null);
+  const closingRectFrame = useRef(null);
   const scrollPauseTimer = useRef(null);
   const nextDockPos = useRef(dockPos);
   const homeDockPos = useRef(dockPos);
@@ -210,11 +212,26 @@ function TerminalWindow() {
     return homeDockPos.current;
   }
 
+  function getClosedDockRect(home = getStableHomeDockPosition()) {
+    const panelWidth = getPanelSize().width;
+    return {
+      left: home.x + (panelWidth - 86),
+      top: home.y,
+      width: 86,
+      height: 42,
+    };
+  }
+
   const closeTerminal = useCallback(({ hideAfterClose = false } = {}) => {
     const home = getStableHomeDockPosition();
     const needsAnimatedHide = hideAfterClose && (open || !hidden || closing);
     window.clearTimeout(closeTimer.current);
+    if (closingRectFrame.current) {
+      cancelAnimationFrame(closingRectFrame.current);
+      closingRectFrame.current = null;
+    }
     if (!open) {
+      setClosingRect(null);
       nextDockPos.current = home;
       setDockPos(home);
       didDrag.current = false;
@@ -232,16 +249,26 @@ function TerminalWindow() {
       return;
     }
 
+    const snapshot = terminalRef.current?.getBoundingClientRect();
+    setClosingRect(snapshot ? {
+      left: snapshot.left,
+      top: snapshot.top,
+      width: snapshot.width,
+      height: snapshot.height,
+    } : null);
     setHidden(false);
     setClosing(true);
     setOpen(false);
     didDrag.current = false;
-    requestAnimationFrame(() => {
+    closingRectFrame.current = requestAnimationFrame(() => {
+      setClosingRect(getClosedDockRect(home));
       nextDockPos.current = home;
       setDockPos(home);
+      closingRectFrame.current = null;
     });
     closeTimer.current = window.setTimeout(() => {
       setClosing(false);
+      setClosingRect(null);
       setHidden(hideAfterClose);
     }, 340);
   }, [closing, hidden, open]);
@@ -274,6 +301,9 @@ function TerminalWindow() {
   useEffect(() => () => {
     window.clearTimeout(closeTimer.current);
     window.clearTimeout(scrollPauseTimer.current);
+    if (closingRectFrame.current) {
+      cancelAnimationFrame(closingRectFrame.current);
+    }
   }, []);
 
   useEffect(() => {
@@ -377,6 +407,15 @@ function TerminalWindow() {
     <div
       ref={terminalRef}
       className={`terminal-hologram liquid-glass ${open ? "terminal-open" : ""} ${closing ? "terminal-closing" : ""}`}
+      style={closingRect ? {
+        position: "fixed",
+        left: `${closingRect.left}px`,
+        top: `${closingRect.top}px`,
+        width: `${closingRect.width}px`,
+        height: `${closingRect.height}px`,
+        maxHeight: `${closingRect.height}px`,
+        marginTop: 0,
+      } : undefined}
       onPointerDown={startDrag}
     >
       <button
@@ -391,6 +430,7 @@ function TerminalWindow() {
             return;
           }
           window.clearTimeout(closeTimer.current);
+          setClosingRect(null);
           setClosing(false);
           setHidden(false);
           setOpen(true);
