@@ -207,8 +207,8 @@ body::-webkit-scrollbar,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 61px;
-  height: 61px;
+  width: 46px;
+  height: 46px;
   padding: 0;
   border: 0;
   border-radius: 999px;
@@ -226,7 +226,7 @@ body::-webkit-scrollbar,
 .top-control::before {
   content: "";
   position: absolute;
-  inset: 15px;
+  inset: 11px;
   border-radius: inherit;
   background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0) 70%);
   opacity: 0.42;
@@ -240,7 +240,7 @@ body::-webkit-scrollbar,
 
 .top-control-progress {
   position: absolute;
-  inset: -8px;
+  inset: -6px;
   border-radius: 999px;
   background:
     conic-gradient(
@@ -250,8 +250,8 @@ body::-webkit-scrollbar,
       rgba(255, 255, 255, 0.92) calc(var(--top-progress) * 1turn),
       transparent 0
     );
-  mask: radial-gradient(circle at center, transparent 26px, rgba(0, 0, 0, 0.98) 29px, transparent 34px);
-  -webkit-mask: radial-gradient(circle at center, transparent 26px, rgba(0, 0, 0, 0.98) 29px, transparent 34px);
+  mask: radial-gradient(circle at center, transparent 20px, rgba(0, 0, 0, 0.98) 22px, transparent 26px);
+  -webkit-mask: radial-gradient(circle at center, transparent 20px, rgba(0, 0, 0, 0.98) 22px, transparent 26px);
   filter: blur(10px);
   opacity: 1;
   pointer-events: none;
@@ -276,8 +276,8 @@ body::-webkit-scrollbar,
       rgba(255, 255, 255, 0.52) calc(var(--top-progress) * 1turn),
       rgba(255, 255, 255, 0) 0turn
     );
-  mask: radial-gradient(circle at center, transparent 28px, rgba(0, 0, 0, 0.9) 29px, transparent 33px);
-  -webkit-mask: radial-gradient(circle at center, transparent 28px, rgba(0, 0, 0, 0.9) 29px, transparent 33px);
+  mask: radial-gradient(circle at center, transparent 21px, rgba(0, 0, 0, 0.9) 22px, transparent 25px);
+  -webkit-mask: radial-gradient(circle at center, transparent 21px, rgba(0, 0, 0, 0.9) 22px, transparent 25px);
   filter: blur(16px);
   opacity: 0.95;
 }
@@ -290,8 +290,8 @@ body::-webkit-scrollbar,
       rgba(255, 255, 255, 0.9) calc(var(--top-progress) * 1turn),
       transparent 0turn
     );
-  mask: radial-gradient(circle at center, transparent 29px, rgba(0, 0, 0, 0.98) 31px, transparent 32px);
-  -webkit-mask: radial-gradient(circle at center, transparent 29px, rgba(0, 0, 0, 0.98) 31px, transparent 32px);
+  mask: radial-gradient(circle at center, transparent 22px, rgba(0, 0, 0, 0.98) 23px, transparent 24px);
+  -webkit-mask: radial-gradient(circle at center, transparent 22px, rgba(0, 0, 0, 0.98) 23px, transparent 24px);
   filter: blur(2px);
   opacity: 0.92;
 }
@@ -302,8 +302,8 @@ body::-webkit-scrollbar,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
+  width: 34px;
+  height: 34px;
   flex: 0 0 auto;
   border-radius: 999px;
   background: transparent;
@@ -314,7 +314,7 @@ body::-webkit-scrollbar,
 .top-control-core::before {
   content: "";
   position: absolute;
-  inset: 14px;
+  inset: 10px;
   border-radius: 999px;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 76%);
   filter: blur(10px);
@@ -671,13 +671,13 @@ body::-webkit-scrollbar,
   .top-control {
     right: 24px;
     bottom: 24px;
-    width: 54px;
-    height: 54px;
+    width: 41px;
+    height: 41px;
   }
 
   .top-control-core {
-    width: 38px;
-    height: 38px;
+    width: 30px;
+    height: 30px;
   }
 
   .hero-cta-row {

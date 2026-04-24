@@ -737,20 +737,21 @@ function BlogIndex() {
   return (
     <section id="recent-posts" className="bg-black px-6 py-24">
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <FadeIn className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
             <SectionBadge># recent posts</SectionBadge>
             <h2 className="mt-5 font-heading text-4xl italic leading-[0.9] tracking-tight text-white md:text-5xl lg:text-6xl">최신 글</h2>
           </div>
           <a href="/posts/" className="font-body text-sm text-white/60 transition hover:text-white">모든 글 보기</a>
-        </div>
-        <div className="mt-8 flex flex-wrap gap-2">
+        </FadeIn>
+        <FadeIn delay={0.08} className="mt-8 flex flex-wrap gap-2">
           {["All", "Project", "Dev Log", "Architecture"].map((tab) => (
             <button key={tab} className="rounded-full px-4 py-2 font-body text-sm text-white/75 liquid-glass" type="button">{tab}</button>
           ))}
-        </div>
+        </FadeIn>
         {latest ? (
-          <a href={latest.url} className="mt-8 block rounded-2xl p-8 transition hover:-translate-y-1 liquid-glass">
+          <FadeIn delay={0.14} className="mt-8">
+            <a href={latest.url} className="block rounded-2xl p-8 transition hover:-translate-y-1 liquid-glass">
             <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
               <div className="max-w-2xl">
                 <div className="font-body text-xs uppercase tracking-[0.18em] text-cyan-100/70">LATEST · {latest.section}</div>
@@ -764,16 +765,19 @@ function BlogIndex() {
               </div>
               <div className="font-body text-sm text-white/45">{latest.dateLabel}<span className="ml-5 text-xl text-white">→</span></div>
             </div>
-          </a>
+            </a>
+          </FadeIn>
         ) : null}
         <div className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {entries.slice(1).map((entry) => (
-            <a key={entry.url} href={entry.url} className="rounded-2xl p-6 transition hover:-translate-y-1 liquid-glass">
-              <div className="font-body text-xs uppercase tracking-[0.18em] text-cyan-100/70">{entry.section}</div>
-              <h3 className="mt-5 font-body text-xl font-medium text-white">{entry.title}</h3>
-              <p className="mt-3 line-clamp-3 font-body text-sm font-light leading-relaxed text-white/55">{entry.summary}</p>
-              <div className="mt-6 font-body text-xs text-white/40">{entry.dateLabel}</div>
-            </a>
+          {entries.slice(1).map((entry, index) => (
+            <FadeIn key={entry.url} delay={0.2 + (index * 0.06)} className="h-full">
+              <a href={entry.url} className="block h-full rounded-2xl p-6 transition hover:-translate-y-1 liquid-glass">
+                <div className="font-body text-xs uppercase tracking-[0.18em] text-cyan-100/70">{entry.section}</div>
+                <h3 className="mt-5 font-body text-xl font-medium text-white">{entry.title}</h3>
+                <p className="mt-3 line-clamp-3 font-body text-sm font-light leading-relaxed text-white/55">{entry.summary}</p>
+                <div className="mt-6 font-body text-xs text-white/40">{entry.dateLabel}</div>
+              </a>
+            </FadeIn>
           ))}
         </div>
       </div>
