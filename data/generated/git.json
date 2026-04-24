@@ -1,6 +1,13 @@
 {
-    "count":  31,
+    "count":  32,
     "commits":  [
+                    {
+                        "hash":  "9a18853d55915b3262b109e8f649f45e137c77ca",
+                        "shortHash":  "9a18853",
+                        "subject":  "feat: integrate live git metrics",
+                        "body":  "",
+                        "committedAt":  "2026-04-24T18:12:33+09:00"
+                    },
                     {
                         "hash":  "5f939096b83ee3fb8ecfe493ae0651d36117703e",
                         "shortHash":  "5f93909",
@@ -49,13 +56,6 @@
                         "subject":  "fix(hugo): sync dev pipeline and asset paths",
                         "body":  "",
                         "committedAt":  "2026-04-24T10:29:08+09:00"
-                    },
-                    {
-                        "hash":  "27e37e89ab10def6c5c7dc33499936f2c874deb9",
-                        "shortHash":  "27e37e8",
-                        "subject":  "fix(ui): polish terminal bar interaction",
-                        "body":  "",
-                        "committedAt":  "2026-04-24T02:16:13+09:00"
                     }
                 ]
 }

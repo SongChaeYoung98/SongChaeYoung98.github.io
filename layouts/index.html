@@ -2,7 +2,7 @@
 {{- $posts := where .Site.RegularPages "Section" "posts" -}}
 {{- $projects := where .Site.RegularPages "Section" "projects" -}}
 {{- $pages := union $posts $projects -}}
-{{- $gitData := hugo.Data.generated.git | default dict -}}
+{{- $gitData := .Site.Data.generated.git | default dict -}}
 {{- $gitCount := index $gitData "count" | default 0 -}}
 {{- $gitCommits := index $gitData "commits" | default slice -}}
 {{- $repoURL := .Site.Params.repoURL | default "" -}}
