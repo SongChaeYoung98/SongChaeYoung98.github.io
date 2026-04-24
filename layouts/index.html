@@ -2,6 +2,10 @@
 {{- $posts := where .Site.RegularPages "Section" "posts" -}}
 {{- $projects := where .Site.RegularPages "Section" "projects" -}}
 {{- $pages := union $posts $projects -}}
+{{- $gitData := hugo.Data.generated.git | default dict -}}
+{{- $gitCount := index $gitData "count" | default 0 -}}
+{{- $gitCommits := index $gitData "commits" | default slice -}}
+{{- $repoURL := .Site.Params.repoURL | default "" -}}
 
 <div id="root"></div>
 <style>
@@ -17,6 +21,7 @@
 </style>
 <script>
 window.__BLOG_DATA__ = {
+  commitCount: {{ $gitCount }},
   posts: [
     {{- range $posts -}}
     {
@@ -27,7 +32,7 @@ window.__BLOG_DATA__ = {
       date: {{ .Date.Format "2006-01-02T15:04:05Z07:00" | jsonify | safeJS }},
       dateLabel: {{ .Date.Format "2006.01.02" | jsonify | safeJS }},
       tags: {{ .Params.tags | default slice | jsonify | safeJS }},
-      commitHash: {{ if .GitInfo }}{{ .GitInfo.AbbreviatedHash | jsonify | safeJS }}{{ else }}""{{ end }}
+      commitHash: ""
     },
     {{- end -}}
   ],
@@ -41,16 +46,19 @@ window.__BLOG_DATA__ = {
       date: {{ .Date.Format "2006-01-02T15:04:05Z07:00" | jsonify | safeJS }},
       dateLabel: {{ .Date.Format "2006.01.02" | jsonify | safeJS }},
       tags: {{ .Params.tags | default slice | jsonify | safeJS }},
-      commitHash: {{ if .GitInfo }}{{ .GitInfo.AbbreviatedHash | jsonify | safeJS }}{{ else }}""{{ end }}
+      commitHash: ""
     },
     {{- end -}}
   ],
   commits: [
-    {{- range first 3 $pages -}}
+    {{- range first 3 $gitCommits -}}
     {
-      hash: {{ if .GitInfo }}{{ .GitInfo.AbbreviatedHash | jsonify | safeJS }}{{ else }}"local"{{ end }},
-      title: {{ .Title | jsonify | safeJS }},
-      url: {{ .RelPermalink | jsonify | safeJS }}
+      hash: {{ .shortHash | default "" | jsonify | safeJS }},
+      fullHash: {{ .hash | default "" | jsonify | safeJS }},
+      title: {{ .subject | default "" | jsonify | safeJS }},
+      body: {{ .body | default "" | jsonify | safeJS }},
+      committedAt: {{ .committedAt | default "" | jsonify | safeJS }},
+      url: {{ if and $repoURL (.hash | default "") }}{{ printf "%s/commit/%s" $repoURL (.hash | default "") | jsonify | safeJS }}{{ else }}""{{ end }}
     },
     {{- end -}}
   ]

@@ -6,6 +6,9 @@ const rootDir = process.cwd();
 const viteBin = process.platform === "win32"
   ? path.join(rootDir, "node_modules", ".bin", "vite.cmd")
   : path.join(rootDir, "node_modules", ".bin", "vite");
+const powershellBin = process.platform === "win32"
+  ? "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+  : "pwsh";
 
 const children = [];
 
@@ -50,5 +53,10 @@ function shutdown(exitCode = 0) {
 process.on("SIGINT", () => shutdown(0));
 process.on("SIGTERM", () => shutdown(0));
 
+spawnChild(
+  powershellBin,
+  ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", path.join("scripts", "watch-git-data.ps1")],
+  "git-data"
+);
 spawnChild(viteBin, ["build", "--watch"], "vite");
 spawnChild("hugo", ["server", "-D"], "hugo");

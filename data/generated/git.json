@@ -1,0 +1,61 @@
+{
+    "count":  31,
+    "commits":  [
+                    {
+                        "hash":  "5f939096b83ee3fb8ecfe493ae0651d36117703e",
+                        "shortHash":  "5f93909",
+                        "subject":  "style: enhance terminal interaction \u0026 layout",
+                        "body":  "",
+                        "committedAt":  "2026-04-24T16:25:04+09:00"
+                    },
+                    {
+                        "hash":  "cc79a9b5e4f5709a9296c904a14937048139c63f",
+                        "shortHash":  "cc79a9b",
+                        "subject":  "feat: add entry animation to recent posts",
+                        "body":  "",
+                        "committedAt":  "2026-04-24T16:14:21+09:00"
+                    },
+                    {
+                        "hash":  "5782e51cfb482943523d676d5adf762e960cc9f4",
+                        "shortHash":  "5782e51",
+                        "subject":  "style: redesign top-control with neon progress",
+                        "body":  "",
+                        "committedAt":  "2026-04-24T14:57:13+09:00"
+                    },
+                    {
+                        "hash":  "8839d4c2ce248852e64056ad5470cf390d49b8b2",
+                        "shortHash":  "8839d4c",
+                        "subject":  "fix(ui): remove jumpy scale on close",
+                        "body":  "",
+                        "committedAt":  "2026-04-24T13:35:32+09:00"
+                    },
+                    {
+                        "hash":  "81507b47b03a3cefb5560fc9ce6d2b0c165f5341",
+                        "shortHash":  "81507b4",
+                        "subject":  "fix(ui): eliminate layout jump on deactivate",
+                        "body":  "",
+                        "committedAt":  "2026-04-24T13:13:30+09:00"
+                    },
+                    {
+                        "hash":  "dc2d5509a384bb36b518330a93e13210e95faffe",
+                        "shortHash":  "dc2d550",
+                        "subject":  "style: polish terminal motion and scrollbar",
+                        "body":  "",
+                        "committedAt":  "2026-04-24T10:45:29+09:00"
+                    },
+                    {
+                        "hash":  "726f5379f46d1be2174a99d8b103ff7e879b3659",
+                        "shortHash":  "726f537",
+                        "subject":  "fix(hugo): sync dev pipeline and asset paths",
+                        "body":  "",
+                        "committedAt":  "2026-04-24T10:29:08+09:00"
+                    },
+                    {
+                        "hash":  "27e37e89ab10def6c5c7dc33499936f2c874deb9",
+                        "shortHash":  "27e37e8",
+                        "subject":  "fix(ui): polish terminal bar interaction",
+                        "body":  "",
+                        "committedAt":  "2026-04-24T02:16:13+09:00"
+                    }
+                ]
+}

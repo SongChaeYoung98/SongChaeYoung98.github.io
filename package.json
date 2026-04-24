@@ -3,10 +3,11 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "dev:hugo": "node scripts/dev-hugo.mjs",
-    "build": "vite build",
-    "build:landing": "vite build",
+    "build": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate-git-data.ps1 && vite build",
+    "build:landing": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate-git-data.ps1 && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "hugo": "hugo server -D"
+    "hugo": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate-git-data.ps1 && hugo server -D",
+    "hugo:build": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate-git-data.ps1 && hugo"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",

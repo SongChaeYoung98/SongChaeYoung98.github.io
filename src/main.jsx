@@ -17,6 +17,7 @@ const statsVideo = "https://stream.mux.com/NcU3HlHeF7CUL86azTTzpy3Tlb00d6iF3BmCd
 const ctaVideo = "https://stream.mux.com/8wrHPCX2dC3msyYU9ObwqNdm00u3ViXvOSHUMRYSEe5Q.m3u8";
 
 const fallbackBlogData = {
+  commitCount: 0,
   posts: [
     {
       title: "Project ASDF",
@@ -77,14 +78,14 @@ function HlsVideo({ src, className = "", desaturate = false }) {
   );
 }
 
-function BlurText({ text, className = "", delay = 100 }) {
+function BlurText({ text, className = "", lineClassName = "", delay = 100 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const lines = text.split("\n");
   return (
     <span ref={ref} className={className}>
       {lines.map((line, lineIndex) => (
-        <span key={`line-${lineIndex}`} className="block whitespace-nowrap">
+        <span key={`line-${lineIndex}`} className={`block ${lineClassName}`}>
           {line.split(" ").map((word, wordIndex) => {
             const index = lines.slice(0, lineIndex).reduce((count, item) => count + item.split(" ").length, 0) + wordIndex;
             return (
@@ -178,7 +179,7 @@ function TerminalWindow() {
   const homeDockPos = useRef(dockPos);
   const renderedDockPos = useRef(dockPos);
   const recent = [...siteData.posts, ...siteData.projects].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 5);
-  const commits = siteData.commits?.length ? siteData.commits : recent.slice(0, 3).map((item) => ({ hash: item.commitHash || "local", title: item.title, url: item.url }));
+  const commits = siteData.commits?.length ? siteData.commits.slice(0, 3) : [];
 
   function getPanelSize() {
     const width = Math.min(window.innerWidth - 32, window.innerWidth < 860 ? 380 : 328);
@@ -488,11 +489,18 @@ function TerminalWindow() {
         </div>
         <div><span className="text-cyan-200">{content.terminal.cwd}</span> <span className="text-white">$ git log --oneline -3</span></div>
         <div className="space-y-1">
-          {commits.map((commit, index) => (
-            <a key={`${commit.hash}-${index}`} href={commit.url || "/posts/"} className="block rounded px-2 py-1 text-white/55 transition hover:bg-white/10 hover:text-white">
-              <span className="text-cyan-100">{commit.hash}</span> {commit.title}
+          {commits.length ? commits.map((commit, index) => (
+            <a
+              key={`${commit.hash}-${index}`}
+              href={commit.url || "#"}
+              target={commit.url ? "_blank" : undefined}
+              rel={commit.url ? "noreferrer noopener" : undefined}
+              className="block rounded px-2 py-1 text-white/55 transition hover:bg-white/10 hover:text-white"
+            >
+              <div><span className="text-cyan-100">{commit.hash}</span> {commit.title}</div>
+              {commit.body ? <div className="mt-0.5 truncate text-[10px] text-white/35">{commit.body}</div> : null}
             </a>
-          ))}
+          )) : <span className="block px-2 text-white/45">No git commits found.</span>}
         </div>
         <div><span className="text-cyan-200">{content.terminal.cwd}</span> <span className="text-white">$</span> <span className="terminal-cursor" /></div>
       </div>
@@ -504,7 +512,7 @@ function TerminalWindow() {
 function Hero() {
   const postCount = String(siteData.posts?.length || 0).padStart(2, "0");
   const projectCount = String(siteData.projects?.length || 0).padStart(2, "0");
-  const commitHash = siteData.commits?.[0]?.hash || "--";
+  const commitCount = String(siteData.commitCount || 0).padStart(2, "0");
 
   return (
     <section className="relative min-h-[900px] overflow-hidden bg-black md:min-h-[940px]">
@@ -519,8 +527,8 @@ function Hero() {
           <span className="rounded-full bg-white px-3 py-1 font-body text-xs font-semibold text-black">Blog</span>
           <span className="px-3 py-1 font-body text-xs text-white/80">{content.hero.badge} ({content.hero.status})</span>
         </FadeIn>
-        <h1 className="max-w-4xl font-heading text-6xl italic leading-[0.8] tracking-[-2px] text-foreground md:text-7xl lg:max-w-5xl lg:text-[5.5rem] lg:tracking-[-4px]">
-          <BlurText text={content.hero.title} delay={100} />
+        <h1 className="hero-title max-w-4xl font-heading text-[clamp(2.8rem,13vw,3.75rem)] italic tracking-[-2px] text-foreground md:text-7xl lg:max-w-5xl lg:text-[5.5rem] lg:tracking-[-4px]">
+          <BlurText text={content.hero.title} lineClassName="hero-title-line px-2 whitespace-normal sm:px-0 sm:whitespace-nowrap" delay={100} />
         </h1>
         <motion.p
           initial={{ filter: "blur(10px)", opacity: 0, y: 20 }}
@@ -543,7 +551,7 @@ function Hero() {
           {[
             [postCount, "Posts"],
             [projectCount, "Projects"],
-            [commitHash, "Commit"],
+            [commitCount, "Commits"],
           ].map(([value, label]) => (
             <div key={label} className="border-r border-white/10 px-5 py-4 last:border-r-0">
               <div className="font-heading text-3xl italic text-white">{value}</div>

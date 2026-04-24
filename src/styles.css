@@ -196,6 +196,15 @@ body::-webkit-scrollbar,
   z-index: 2;
 }
 
+.hero-title {
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+.hero-title-line {
+  padding-bottom: 0.12em;
+}
+
 .top-control {
   --top-progress: 0;
   --top-accent: #47d8ff;
@@ -721,4 +730,30 @@ body::-webkit-scrollbar,
     max-height: calc(min(360px, 100vh - 104px) - 48px);
   }
 
+}
+
+@media (min-width: 420px) {
+  .hero-title {
+    line-height: 1.1;
+  }
+
+  .hero-title-line {
+    padding-bottom: 0.1em;
+  }
+}
+
+@media (min-width: 640px) {
+  .hero-title {
+    line-height: 1.02;
+  }
+
+  .hero-title-line {
+    padding-bottom: 0.04em;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    line-height: 0.9;
+  }
 }

@@ -6,7 +6,7 @@ enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
 buildExpired = false
-enableGitInfo = true
+enableGitInfo = false
 
 [pagination]
   pagerSize = 10
@@ -21,6 +21,7 @@ enableGitInfo = true
   description = "AI-era engineering notes, product experiments, and production-grade development logs."
   keywords = ["Backend", "System Design", "DevLog", "Architecture", "AI", "Web"]
   author = "SongChaeYoung"
+  repoURL = "https://github.com/SongChaeYoung98/SongChaeYoung98.github.io"
   DateFormat = "2006. 01. 02"
   defaultTheme = "dark"
   disableThemeToggle = true
@@ -99,4 +100,4 @@ enableGitInfo = true
     style = "base16-snazzy"
 
 [frontmatter]
-  lastmod = ["lastmod", ":git", "date"]
+  lastmod = ["lastmod", "date"]
