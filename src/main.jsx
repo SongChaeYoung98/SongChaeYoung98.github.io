@@ -165,6 +165,7 @@ function TerminalWindow() {
   const [closingAnimating, setClosingAnimating] = useState(false);
   const [inHeroRange, setInHeroRange] = useState(true);
   const [hidden, setHidden] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const terminalRef = useRef(null);
   const orbitRef = useRef(null);
   const drag = useRef(null);
@@ -175,6 +176,7 @@ function TerminalWindow() {
   const scrollPauseTimer = useRef(null);
   const nextDockPos = useRef(dockPos);
   const homeDockPos = useRef(dockPos);
+  const renderedDockPos = useRef(dockPos);
   const recent = [...siteData.posts, ...siteData.projects].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 5);
   const commits = siteData.commits?.length ? siteData.commits : recent.slice(0, 3).map((item) => ({ hash: item.commitHash || "local", title: item.title, url: item.url }));
 
@@ -199,7 +201,7 @@ function TerminalWindow() {
     const { width } = getPanelSize();
     const mobile = window.innerWidth < 860;
     const rightInset = mobile ? 16 : 20;
-    const y = Math.round(window.innerHeight * (mobile ? 0.52 : 0.44));
+    const y = Math.round(window.innerHeight * (mobile ? 0.34 : 0.26));
     return clampDock({
       x: window.innerWidth - width - rightInset,
       y,
@@ -348,11 +350,13 @@ function TerminalWindow() {
           const home = getDockHomePosition();
           homeDockPos.current = home;
           nextDockPos.current = home;
+          renderedDockPos.current = home;
           return home;
         }
         if (!value) return value;
         const clamped = clampDock(value);
         nextDockPos.current = clamped;
+        renderedDockPos.current = clamped;
         return clamped;
       });
     }
@@ -360,6 +364,26 @@ function TerminalWindow() {
     window.addEventListener("resize", keepInView);
     return () => window.removeEventListener("resize", keepInView);
   }, [open]);
+
+  function animateDockToTarget({ snap = false } = {}) {
+    if (frame.current) return;
+    frame.current = requestAnimationFrame(() => {
+      const target = nextDockPos.current;
+      const current = renderedDockPos.current || target;
+      const eased = snap ? target : {
+        x: current.x + ((target.x - current.x) * 0.24),
+        y: current.y + ((target.y - current.y) * 0.24),
+      };
+      const settled = snap || (Math.abs(target.x - eased.x) < 0.6 && Math.abs(target.y - eased.y) < 0.6);
+      const next = settled ? target : eased;
+      renderedDockPos.current = next;
+      setDockPos(next);
+      frame.current = null;
+      if (!settled) {
+        animateDockToTarget();
+      }
+    });
+  }
 
   function startDrag(event) {
     if (!open) {
@@ -372,6 +396,8 @@ function TerminalWindow() {
     const origin = rect ? { x: rect.left, y: rect.top } : dockPos || getDockHomePosition();
     drag.current = { x: event.clientX - origin.x, y: event.clientY - origin.y, startX: event.clientX, startY: event.clientY };
     didDrag.current = false;
+    renderedDockPos.current = origin;
+    setDragging(true);
     window.addEventListener("pointermove", moveDrag);
     window.addEventListener("pointerup", stopDrag);
   }
@@ -381,20 +407,12 @@ function TerminalWindow() {
       didDrag.current = true;
     }
     nextDockPos.current = clampDock({ x: event.clientX - drag.current.x, y: event.clientY - drag.current.y });
-    if (!frame.current) {
-      frame.current = requestAnimationFrame(() => {
-        setDockPos(nextDockPos.current);
-        frame.current = null;
-      });
-    }
+    animateDockToTarget();
   }
   function stopDrag() {
     drag.current = null;
-    if (frame.current) {
-      cancelAnimationFrame(frame.current);
-      frame.current = null;
-    }
-    setDockPos(nextDockPos.current);
+    setDragging(false);
+    animateDockToTarget({ snap: true });
     window.removeEventListener("pointermove", moveDrag);
     window.removeEventListener("pointerup", stopDrag);
   }
@@ -405,7 +423,7 @@ function TerminalWindow() {
   return (
     <div
       ref={orbitRef}
-      className={`terminal-orbit ${open ? "terminal-orbit-open" : ""} ${closing ? "terminal-orbit-closing" : ""} ${orbitHidden ? "terminal-orbit-hidden" : ""} ${orbitInteractive ? "" : "terminal-orbit-inactive"}`}
+      className={`terminal-orbit ${open ? "terminal-orbit-open" : ""} ${closing ? "terminal-orbit-closing" : ""} ${orbitHidden ? "terminal-orbit-hidden" : ""} ${orbitInteractive ? "" : "terminal-orbit-inactive"} ${dragging ? "terminal-orbit-dragging" : ""}`}
       style={{ left: `${dockPos.x}px`, top: `${dockPos.y}px`, right: "auto", bottom: "auto" }}
       aria-hidden={!orbitInteractive}
     >

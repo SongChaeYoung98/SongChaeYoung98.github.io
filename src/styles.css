@@ -395,6 +395,10 @@ body::-webkit-scrollbar,
   transition: left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.24s ease;
 }
 
+.terminal-orbit.terminal-orbit-dragging {
+  transition: none;
+}
+
 .terminal-orbit.terminal-orbit-scroll-paused .terminal-hologram:not(.terminal-open):not(.terminal-closing) {
   animation-play-state: paused;
 }
@@ -429,6 +433,11 @@ body::-webkit-scrollbar,
   overflow: hidden;
   cursor: grab;
   box-shadow: 0 26px 90px rgba(0, 0, 0, 0.46), 0 0 56px rgba(90, 228, 255, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.18);
+}
+
+.terminal-orbit.terminal-orbit-dragging .terminal-hologram.terminal-open {
+  cursor: grabbing;
+  box-shadow: 0 30px 96px rgba(0, 0, 0, 0.48), 0 0 60px rgba(90, 228, 255, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.18);
 }
 
 .terminal-hologram.terminal-closing {
