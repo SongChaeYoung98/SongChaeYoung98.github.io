@@ -162,6 +162,7 @@ function TerminalWindow() {
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const [closingRect, setClosingRect] = useState(null);
+  const [closingAnimating, setClosingAnimating] = useState(false);
   const [inHeroRange, setInHeroRange] = useState(true);
   const [hidden, setHidden] = useState(false);
   const terminalRef = useRef(null);
@@ -232,6 +233,7 @@ function TerminalWindow() {
     }
     if (!open) {
       setClosingRect(null);
+      setClosingAnimating(false);
       nextDockPos.current = home;
       setDockPos(home);
       didDrag.current = false;
@@ -256,11 +258,13 @@ function TerminalWindow() {
       width: snapshot.width,
       height: snapshot.height,
     } : null);
+    setClosingAnimating(false);
     setHidden(false);
     setClosing(true);
     setOpen(false);
     didDrag.current = false;
     closingRectFrame.current = requestAnimationFrame(() => {
+      setClosingAnimating(true);
       setClosingRect(getClosedDockRect(home));
       nextDockPos.current = home;
       setDockPos(home);
@@ -269,6 +273,7 @@ function TerminalWindow() {
     closeTimer.current = window.setTimeout(() => {
       setClosing(false);
       setClosingRect(null);
+      setClosingAnimating(false);
       setHidden(hideAfterClose);
     }, 340);
   }, [closing, hidden, open]);
@@ -415,6 +420,7 @@ function TerminalWindow() {
         height: `${closingRect.height}px`,
         maxHeight: `${closingRect.height}px`,
         marginTop: 0,
+        transition: closingAnimating ? undefined : "none",
       } : undefined}
       onPointerDown={startDrag}
     >
@@ -431,6 +437,7 @@ function TerminalWindow() {
           }
           window.clearTimeout(closeTimer.current);
           setClosingRect(null);
+          setClosingAnimating(false);
           setClosing(false);
           setHidden(false);
           setOpen(true);
