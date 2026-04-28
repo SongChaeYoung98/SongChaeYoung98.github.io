@@ -228,6 +228,11 @@ function TerminalWindow() {
 
   const closeTerminal = useCallback(({ hideAfterClose = false } = {}) => {
     const home = getStableHomeDockPosition();
+    if (hideAfterClose && !open) {
+      if (hidden || closing) {
+        return;
+      }
+    }
     const needsAnimatedHide = hideAfterClose && (open || !hidden || closing);
     window.clearTimeout(closeTimer.current);
     if (closingRectFrame.current) {
