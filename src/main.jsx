@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+﻿import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { motion, useInView } from "motion/react";
 import Hls from "hls.js";
@@ -132,16 +132,18 @@ function Navbar() {
   const links = [
     ["Home", "/"],
     ["Posts", "/posts/"],
+    ["Troubleshooting", "/troubleshooting/"],
+    ["Architecture", "/architecture/"],
+    ["Dev Log", "/devlog/"],
     ["Projects", "/projects/"],
     ["Tags", "/tags/"],
-    ["Archive", "#recent-posts"],
   ];
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between px-4 py-3 backdrop-blur-md md:fixed md:left-0 md:right-0 md:top-4 md:bg-transparent md:px-8 md:py-3 md:backdrop-blur-0 lg:px-16">
       <a href="/" className="flex h-11 w-11 items-center justify-center rounded-full liquid-glass-strong md:h-12 md:w-12" aria-label="Home">
         <img src={logoIcon} alt="" className="h-11 w-11 object-contain md:h-12 md:w-12" />
       </a>
-      <div className="hidden items-center rounded-full px-1.5 py-1 liquid-glass md:flex">
+      <div className="hidden items-center rounded-full px-1.5 py-1 liquid-glass md:flex md:max-w-[calc(100vw-240px)] md:overflow-x-auto">
         {links.map(([label, href]) => (
           <a key={label} href={href} className="px-3 py-2 font-body text-sm font-medium text-foreground/90">
             {label}
@@ -178,7 +180,7 @@ function TerminalWindow() {
   const nextDockPos = useRef(dockPos);
   const homeDockPos = useRef(dockPos);
   const renderedDockPos = useRef(dockPos);
-  const recent = [...siteData.posts, ...siteData.projects].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 5);
+  const recent = [...siteData.posts, ...siteData.projects].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 3);
   const commits = siteData.commits?.length ? siteData.commits.slice(0, 3) : [];
 
   function getPanelSize() {
@@ -483,16 +485,16 @@ function TerminalWindow() {
         <span className="terminal-mini-meta" aria-hidden="true">recent</span>
       </button>
       <div className="terminal-body space-y-3 p-4 font-mono text-[11px] leading-relaxed text-white/70">
-        <div><span className="text-cyan-200">{content.terminal.cwd}</span> <span className="text-white">$ {content.terminal.command}</span></div>
+        <div className="truncate whitespace-nowrap"><span className="text-cyan-200">{content.terminal.cwd}</span> <span className="text-white">$ {content.terminal.command}</span></div>
         <div className="space-y-1">
           {recent.length ? recent.map((item) => (
-            <a key={item.url} className="block rounded px-2 py-1 text-white/65 transition hover:bg-white/10 hover:text-white" href={item.url}>
+            <a key={item.url} className="block truncate whitespace-nowrap rounded px-2 py-1 text-white/65 transition hover:bg-white/10 hover:text-white" href={item.url}>
               <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 text-[10px] uppercase text-cyan-100">{item.section}</span>
               {item.title}
             </a>
           )) : <span className="block px-2 text-white/45">No Markdown entries yet.</span>}
         </div>
-        <div><span className="text-cyan-200">{content.terminal.cwd}</span> <span className="text-white">$ git log --oneline -3</span></div>
+        <div className="truncate whitespace-nowrap"><span className="text-cyan-200">{content.terminal.cwd}</span> <span className="text-white">$ git log --oneline -3</span></div>
         <div className="space-y-1">
           {commits.length ? commits.map((commit, index) => (
             <a
@@ -500,14 +502,14 @@ function TerminalWindow() {
               href={commit.url || "#"}
               target={commit.url ? "_blank" : undefined}
               rel={commit.url ? "noreferrer noopener" : undefined}
-              className="block rounded px-2 py-1 text-white/55 transition hover:bg-white/10 hover:text-white"
+              className="block truncate whitespace-nowrap rounded px-2 py-1 text-white/55 transition hover:bg-white/10 hover:text-white"
             >
-              <div><span className="text-cyan-100">{commit.hash}</span> {commit.title}</div>
+              <div className="truncate whitespace-nowrap"><span className="text-cyan-100">{commit.hash}</span> {commit.title}</div>
               {commit.body ? <div className="mt-0.5 truncate text-[10px] text-white/35">{commit.body}</div> : null}
             </a>
           )) : <span className="block px-2 text-white/45">No git commits found.</span>}
         </div>
-        <div><span className="text-cyan-200">{content.terminal.cwd}</span> <span className="text-white">$</span> <span className="terminal-cursor" /></div>
+        <div className="truncate whitespace-nowrap"><span className="text-cyan-200">{content.terminal.cwd}</span> <span className="text-white">$</span> <span className="terminal-cursor" /></div>
       </div>
     </div>
     </div>
@@ -610,6 +612,7 @@ function FeaturesChess() {
     ...row,
     image: index === 0 ? featureOne : featureTwo,
     reverse: index % 2 === 1,
+    href: index === 0 ? "/architecture/" : "/troubleshooting/",
   }));
   return (
     <section id="work" className="bg-black px-6 py-28">
@@ -622,7 +625,7 @@ function FeaturesChess() {
               <div className="flex-1">
                 <h3 className="font-heading text-4xl italic leading-[0.9] text-white md:text-5xl">{row.title}</h3>
                 <p className="mt-5 max-w-md font-body text-sm font-light leading-relaxed text-white/60 md:text-base">{row.body}</p>
-                <Button className="mt-7">{row.button} <ArrowUpRight className="h-4 w-4" /></Button>
+                <a href={row.href}><Button className="mt-7">{row.button} <ArrowUpRight className="h-4 w-4" /></Button></a>
               </div>
               <div className="flex-1 rounded-2xl p-2 liquid-glass">
                 <img src={row.image} alt="" className="aspect-[16/10] w-full rounded-2xl object-cover" loading="lazy" />
@@ -776,8 +779,13 @@ function BlogIndex() {
           <a href="/posts/" className="font-body text-sm text-white/60 transition hover:text-white">모든 글 보기</a>
         </FadeIn>
         <FadeIn delay={0.08} className="mt-8 flex flex-wrap gap-2">
-          {["All", "Project", "Dev Log", "Architecture"].map((tab) => (
-            <button key={tab} className="rounded-full px-4 py-2 font-body text-sm text-white/75 liquid-glass" type="button">{tab}</button>
+          {[
+            ["All", "/posts/"],
+            ["Troubleshooting", "/troubleshooting/"],
+            ["Architecture", "/architecture/"],
+            ["Dev Log", "/devlog/"],
+          ].map(([tab, href]) => (
+            <a key={tab} href={href} className="rounded-full px-4 py-2 font-body text-sm text-white/75 liquid-glass transition hover:text-white">{tab}</a>
           ))}
         </FadeIn>
         {latest ? (
@@ -794,7 +802,10 @@ function BlogIndex() {
                   ))}
                 </div>
               </div>
-              <div className="font-body text-sm text-white/45">{latest.dateLabel}<span className="ml-5 text-xl text-white">→</span></div>
+              <div className="flex items-center gap-4 font-body text-sm text-white/45">
+                <span>{latest.dateLabel}</span>
+                <ArrowUpRight className="h-5 w-5 text-white" />
+              </div>
             </div>
             </a>
           </FadeIn>
@@ -882,3 +893,5 @@ function App() {
 }
 
 createRoot(document.getElementById("root")).render(<App />);
+
+

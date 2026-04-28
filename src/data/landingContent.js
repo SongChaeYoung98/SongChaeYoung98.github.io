@@ -11,7 +11,7 @@ export const content = {
   },
   terminal: {
     title: "deploy-log.sh",
-    command: "./deploy-log.sh --recent",
+    command: "./log --recent",
     cwd: "~/backend",
   },
   process: {

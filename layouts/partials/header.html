@@ -1,0 +1,13 @@
+{{- if not .IsHome }}
+<header class="site-header">
+  <nav class="site-nav">
+    <div class="site-nav__menu">
+      {{- $current := .RelPermalink }}
+      {{- range site.Menus.main }}
+      {{- $menuURL := .URL | relLangURL }}
+      <a href="{{ .URL | absLangURL }}"{{ if eq $current $menuURL }} aria-current="page"{{ end }}>{{ .Name }}</a>
+      {{- end }}
+    </div>
+  </nav>
+</header>
+{{- end }}

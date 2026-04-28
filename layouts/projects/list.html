@@ -1,29 +1,47 @@
 {{- define "main" -}}
-<header class="page-header">
-  <h1>{{ .Title | default "Projects" }}</h1>
-  <div class="post-description">{{ len .Pages }} shipped projects and case studies.</div>
-</header>
-
 {{- $pages := .Pages.ByDate.Reverse -}}
-{{- if $pages -}}
-{{- range $pages -}}
-<article class="post-entry">
-  <header class="entry-header">
-    <h2>{{ .Title }}</h2>
-  </header>
-  {{- if .Summary }}
-  <div class="entry-content">
-    <p>{{ .Summary | plainify | truncate 180 }}</p>
+<section class="content-shell">
+  <div class="content-shell__glow content-shell__glow--left" aria-hidden="true"></div>
+  <div class="content-shell__glow content-shell__glow--right" aria-hidden="true"></div>
+  <div class="content-shell__inner">
+    <header class="content-hero">
+      <div class="content-hero__eyebrow">Project Stories</div>
+      <h1>{{ .Title | default "Projects" }}</h1>
+      <p>아이디어를 실제 결과물로 옮긴 과정과 구현 선택을 정리한 프로젝트 기록입니다.</p>
+      <div class="content-hero__actions">
+        <a class="content-pill" href="/posts/">전체 글</a>
+        <a class="content-pill" href="/architecture/">설계 글</a>
+        <a class="content-pill" href="/devlog/">개발 기록</a>
+      </div>
+    </header>
+
+    {{- if $pages }}
+    <div class="content-grid">
+      {{- range $pages }}
+      <article class="content-card">
+        <div class="content-card__meta">
+          <span>{{ .Date.Format "2006.01.02" }}</span>
+          <span>Project</span>
+        </div>
+        <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+        <p>{{ .Summary | plainify | truncate 180 }}</p>
+        <div class="content-card__footer">
+          <div class="content-tags">
+            {{- range first 3 (.Params.stack | default (.Params.tags | default slice)) }}
+            <span>{{ . }}</span>
+            {{- end }}
+          </div>
+          <a class="content-card__link" href="{{ .RelPermalink }}">케이스 스터디 보기</a>
+        </div>
+      </article>
+      {{- end }}
+    </div>
+    {{- else }}
+    <div class="content-empty">
+      <h2>아직 프로젝트 글이 없습니다.</h2>
+      <p><code>content/projects/</code>에 프로젝트 문서를 추가하면 이곳에 카드로 노출됩니다.</p>
+    </div>
+    {{- end }}
   </div>
-  {{- end }}
-  <footer class="entry-footer">
-    {{ .Date.Format "2006.01.02" }}
-    {{- with .Params.stack }} · {{ delimit . ", " }}{{ end -}}
-  </footer>
-  <a class="entry-link" aria-label="project link to {{ .Title | plainify }}" href="{{ .RelPermalink }}"></a>
-</article>
-{{- end -}}
-{{- else -}}
-<p>No projects yet. Add Markdown files under <code>content/projects/</code>.</p>
-{{- end -}}
+</section>
 {{- end -}}

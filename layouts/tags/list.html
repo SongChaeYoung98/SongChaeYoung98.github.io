@@ -1,20 +1,31 @@
 {{- define "main" -}}
-<header class="page-header">
-  <h1>Tags</h1>
-  <div class="post-description">{{ len .Site.Taxonomies.tags }} tags across the blog archive.</div>
-</header>
+<section class="content-shell">
+  <div class="content-shell__glow content-shell__glow--left" aria-hidden="true"></div>
+  <div class="content-shell__glow content-shell__glow--right" aria-hidden="true"></div>
+  <div class="content-shell__inner">
+    <header class="content-hero">
+      <div class="content-hero__eyebrow">Tag Index</div>
+      <h1>Tags</h1>
+      <p>주제별로 전체 글을 빠르게 탐색할 수 있는 태그 모음입니다.</p>
+    </header>
 
-{{- if .Site.Taxonomies.tags -}}
-<ul class="terms-tags">
-  {{- range $name, $pages := .Site.Taxonomies.tags -}}
-  <li>
-    <a href="{{ "/tags/" | relURL }}{{ $name | urlize }}/">
-      {{ $name }} <sup><strong><sup>{{ len $pages }}</sup></strong></sup>
-    </a>
-  </li>
-  {{- end -}}
-</ul>
-{{- else -}}
-<p>No tags yet. Add <code>tags</code> to Markdown front matter.</p>
-{{- end -}}
+    {{- if .Site.Taxonomies.tags }}
+    <ul class="content-tag-cloud">
+      {{- range $name, $pages := .Site.Taxonomies.tags }}
+      <li>
+        <a href="{{ "/tags/" | relURL }}{{ $name | urlize }}/">
+          <span>{{ $name }}</span>
+          <strong>{{ len $pages }}</strong>
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+    {{- else }}
+    <div class="content-empty">
+      <h2>등록된 태그가 없습니다.</h2>
+      <p>Markdown front matter에 <code>tags</code>를 추가하면 여기에 자동으로 정리됩니다.</p>
+    </div>
+    {{- end }}
+  </div>
+</section>
 {{- end -}}

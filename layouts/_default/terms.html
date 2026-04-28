@@ -1,0 +1,25 @@
+{{- define "main" -}}
+<section class="content-shell">
+  <div class="content-shell__glow content-shell__glow--left" aria-hidden="true"></div>
+  <div class="content-shell__glow content-shell__glow--right" aria-hidden="true"></div>
+  <div class="content-shell__inner">
+    <header class="content-hero">
+      <div class="content-hero__eyebrow">Browse Topics</div>
+      <h1>{{ .Title }}</h1>
+      <p>{{ .Description | default "주제별 색인 페이지입니다. 원하는 분류로 바로 이동해 관련 글만 확인할 수 있습니다." }}</p>
+    </header>
+
+    <ul class="content-tag-cloud">
+      {{- $type := .Type }}
+      {{- range .Data.Terms.Alphabetical }}
+      <li>
+        <a href="{{ printf "/%s/%s/" $type (.Name | urlize) | relLangURL }}">
+          <span>{{ .Name }}</span>
+          <strong>{{ .Count }}</strong>
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+  </div>
+</section>
+{{- end -}}

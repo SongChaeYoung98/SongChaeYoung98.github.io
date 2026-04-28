@@ -69,15 +69,30 @@ enableGitInfo = false
     url = "/posts/"
     weight = 10
   [[menu.main]]
+    identifier = "troubleshooting"
+    name = "Troubleshooting"
+    url = "/troubleshooting/"
+    weight = 20
+  [[menu.main]]
+    identifier = "architecture"
+    name = "Architecture"
+    url = "/architecture/"
+    weight = 30
+  [[menu.main]]
+    identifier = "devlog"
+    name = "Dev Log"
+    url = "/devlog/"
+    weight = 40
+  [[menu.main]]
     identifier = "projects"
     name = "Projects"
     url = "/projects/"
-    weight = 20
+    weight = 50
   [[menu.main]]
     identifier = "tags"
     name = "Tags"
     url = "/tags/"
-    weight = 30
+    weight = 60
 
 [taxonomies]
   category = "categories"

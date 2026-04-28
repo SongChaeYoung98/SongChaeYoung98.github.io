@@ -1,24 +1,25 @@
 {{- define "main" -}}
-{{- $pages := .Pages.ByDate.Reverse -}}
+{{- $content := where site.RegularPages "Section" "in" (slice "posts" "projects") -}}
+{{- $byTag := where $content "Params.tags" "intersect" (slice "설계" "architecture" "system-design") -}}
+{{- $byCategory := where $content "Params.categories" "intersect" (slice "architecture" "design") -}}
+{{- $pages := collections.Sort (union $byTag $byCategory) "Date" "desc" -}}
 <section class="content-shell">
   <div class="content-shell__glow content-shell__glow--left" aria-hidden="true"></div>
   <div class="content-shell__glow content-shell__glow--right" aria-hidden="true"></div>
   <div class="content-shell__inner">
     <header class="content-hero">
-      <div class="content-hero__eyebrow">Content Archive</div>
-      <h1>{{ .Title | default "Posts" }}</h1>
-      <p>트러블 슈팅, 설계 메모, 개발 기록을 한 흐름으로 정리한 글 모음입니다.</p>
+      <div class="content-hero__eyebrow">Architecture Notes</div>
+      <h1>설계 글</h1>
+      <p>문제를 어떤 경계로 나눴는지, 데이터와 API를 어떤 구조로 잡았는지, 선택 이유까지 남겨둔 설계 기록입니다.</p>
       <div class="content-hero__actions">
+        <a class="content-pill" href="/posts/">전체 글</a>
         <a class="content-pill" href="/troubleshooting/">트러블 슈팅</a>
-        <a class="content-pill" href="/architecture/">설계 글</a>
-        <a class="content-pill" href="/devlog/">개발 기록</a>
+        <a class="content-pill" href="/projects/">프로젝트</a>
       </div>
     </header>
 
     {{- if .Content }}
-    <div class="content-prose">
-      {{ .Content }}
-    </div>
+    <div class="content-prose">{{ .Content }}</div>
     {{- end }}
 
     {{- if $pages }}
@@ -27,7 +28,7 @@
       <article class="content-card">
         <div class="content-card__meta">
           <span>{{ .Date.Format "2006.01.02" }}</span>
-          <span>{{ .ReadingTime }} min read</span>
+          <span>{{ .Section }}</span>
         </div>
         <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
         <p>{{ .Summary | plainify | truncate 180 }}</p>
@@ -37,15 +38,15 @@
             <span>{{ . }}</span>
             {{- end }}
           </div>
-          <a class="content-card__link" href="{{ .RelPermalink }}">자세히 보기</a>
+          <a class="content-card__link" href="{{ .RelPermalink }}">설계 의도 보기</a>
         </div>
       </article>
       {{- end }}
     </div>
     {{- else }}
     <div class="content-empty">
-      <h2>아직 게시된 글이 없습니다.</h2>
-      <p><code>content/posts/</code> 아래에 Markdown 파일을 추가하면 이곳에 자동으로 표시됩니다.</p>
+      <h2>설계 글이 아직 없습니다.</h2>
+      <p><code>설계</code>, <code>architecture</code>, <code>system-design</code> 태그나 <code>architecture</code> 카테고리로 연결해둘 수 있습니다.</p>
     </div>
     {{- end }}
   </div>
